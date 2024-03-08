@@ -42,15 +42,16 @@ int main_2()
     double x, y, z;
     cout << "请输入三个数：" << endl;
     cin >> x >> y >> z;
-    if (y < x)
+    double min = x;
+    if (y < min)
     {
-        x = y;
+        min = y;
     }
-    if (z < x)
+    if (z < min)
     {
-        x = z;
+        min = z;
     }
-    cout << x << endl;
+    cout << min << endl;
     system("pause");
     return 0;
 }
