@@ -5,7 +5,7 @@
 using namespace std;
 
 // 法一：
-int main_()
+int main()
 {
     char s[4] = "fly";
     for (int i = 0; i < 3; i++)
@@ -57,7 +57,7 @@ void Encode_2(char *source)
     }
 }
 
-int main_3()
+int main_2()
 {
     char s[4] = "fly";
     Encode_2(s);
