@@ -10,5 +10,6 @@ int main()
     cout << "请输入成绩：" << endl;
     cin >> s1 >> s2 >> s3;
     cout << "三门课的平均成绩为：" << (s1 + s2 + s3) / 3.0 << endl;
+    system("pause");
     return 0;
 }
