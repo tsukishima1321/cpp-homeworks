@@ -66,3 +66,16 @@ int main_3()
     system("pause");
     return 0;
 }
+
+//法4
+int main_4()
+{
+    using std::cin, std::cout, std::endl;
+    int a, b, c, a_b_min, min;
+    cout << "请输入三个整数";
+    cin >> a >> b >> c;
+    a_b_min = (a <= b) * a + (b <= a) * b;
+    min = (a_b_min <= c) *a_b_min + (c <= a_b_min) * c;
+    cout << "最小的整数是：" << min << endl;
+    return 0;
+}

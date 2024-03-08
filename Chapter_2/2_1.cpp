@@ -24,3 +24,20 @@ int main()
 	system("pause");
 	return 0;
 }
+
+//法二
+
+#define pi 3.1415926535897932384626433
+int main_2()
+{
+  double x, y, area;
+  area = pi * 4 * 4 - pi * 2 * 2;
+  std::cout << "请输入x和y的值:"
+            << "\n";
+  std::cin >> x >> y;
+  area = ((-2 >= -sqrt(y * y + x * x) && -4 <= -sqrt(y * y + x * x) ||
+           4 >= sqrt(y * y + x * x) && 2 <= sqrt(y * y + x * x))) *
+         area;
+  std::cout << "阴影部分面积是：" << area << std::endl;
+  return 0;
+}

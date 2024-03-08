@@ -48,3 +48,39 @@ int main_2()
     cout << s;
     return 0;
 }
+
+//允许输入的做法
+#include <string>
+
+int main_3()
+{
+    using std::cin;
+    using std::cout;
+    using std::endl;
+    using std::string;
+    using std::getline;
+
+    string plain_text, cipher_text;
+    char offset;
+    cout << "请输入明文：";
+    getline(cin, plain_text);
+    for (char c : plain_text)
+    {
+        if (c >= 'a' && c <= 'z')
+        {
+            offset = (c - 'a' + 3) % 26 + 'a';
+            cipher_text += offset;
+        }
+        else if (c >= 'A' && c <= 'Z')
+        {
+            offset = (c - 'A' + 3) % 26 + 'A';
+            cipher_text += offset;
+        }
+        else
+        {
+            cipher_text += c;
+        }
+    }
+    cout << "加密后的文字是：" << cipher_text << endl;
+    return 0;
+}
