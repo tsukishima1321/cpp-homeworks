@@ -5,7 +5,7 @@
 using namespace std;
 
 // 法一：
-int main()
+int main_()
 {
     char s[4] = "fly";
     for (int i = 0; i < 3; i++)
@@ -24,8 +24,8 @@ int main()
     return 0;
 }
 
-//法二：使用函数
-void Encode(char *source, int length)
+// 法二：使用函数
+void Encode_1(char *source, int length)
 {
     for (int i = 0; i < length; i++)
     {
@@ -41,15 +41,32 @@ void Encode(char *source, int length)
     }
 }
 
-int main_2()
+void Encode_2(char *source)
+{
+    for (int i = 0; source[++i] != '\0';)
+    {
+        char &c = source[i];
+        if (c >= 'x' && c <= 'z')
+        {
+            c -= 23;
+        }
+        else if (c >= 'a' && c < 'x')
+        {
+            c += 3;
+        }
+    }
+}
+
+int main_3()
 {
     char s[4] = "fly";
-    Encode(s, 3);
+    Encode_2(s);
     cout << s;
+    system("pause");
     return 0;
 }
 
-//允许输入的做法
+// 允许输入的做法
 #include <string>
 
 int main_3()
@@ -57,8 +74,8 @@ int main_3()
     using std::cin;
     using std::cout;
     using std::endl;
-    using std::string;
     using std::getline;
+    using std::string;
 
     string plain_text, cipher_text;
     char offset;
