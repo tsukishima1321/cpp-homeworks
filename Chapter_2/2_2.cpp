@@ -52,4 +52,16 @@ int main_2()
     }
     cout << x << endl;
     system("pause");
+    return 0;
+}
+
+// 法3：
+int main_3()
+{
+    double x, y, z;
+    cout << "请输入三个数：" << endl;
+    cin >> x >> y >> z;
+    cout << ((((x < y) ? x : y) < z) ? ((x < y) ? x : y) : z);
+    system("pause");
+    return 0;
 }
