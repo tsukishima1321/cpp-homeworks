@@ -66,7 +66,7 @@ int main_2()
     return 0;
 }
 
-// 允许输入的做法
+// 法3：
 #include <string>
 
 int main_3()
