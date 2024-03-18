@@ -25,34 +25,14 @@ int main()
 }
 
 // 法二：使用函数
-void Encode_1(char *source, int length)
-{
-    for (int i = 0; i < length; i++)
-    {
-        char &c = source[i];
-        if (c >= 'x' && c <= 'z')
-        {
-            c -= 23;
-        }
-        else
-        {
-            c += 3;
-        }
-    }
-}
-
-void Encode_2(char *source)
+void Encode(char *source)
 {
     for (int i = 0; source[++i] != '\0';)
     {
         char &c = source[i];
-        if (c >= 'x' && c <= 'z')
+        if (c >= 'a' && c <= 'z')
         {
-            c -= 23;
-        }
-        else if (c >= 'a' && c < 'x')
-        {
-            c += 3;
+            c = (c - 'a' + 3) % 26 + 'a';
         }
     }
 }
@@ -60,7 +40,7 @@ void Encode_2(char *source)
 int main_2()
 {
     char s[4] = "fly";
-    Encode_2(s);
+    Encode(s);
     cout << s;
     system("pause");
     return 0;
