@@ -58,3 +58,56 @@ int main(){
     system("pause");
     return 0;
 }
+
+//某愚蠢的法四：
+#include <iostream>
+
+int main_4()
+{
+    using std::cin, std::cout, std::endl;
+    double x, y, z, smallest, medium, largest, exchange;
+    cout << "请输入x，y，z的值：" << endl;
+    cin >> x >> y >> z;
+    if (x >= y)
+    {
+        largest = x;
+        medium = y;
+        if (z >= x)
+        {
+            smallest = medium;
+            medium = largest;
+            largest = z;
+        }
+        else if (y <= z && z < x)
+        {
+            smallest = medium;
+            medium = z;
+        }
+        else
+        {
+            smallest = z;
+        }
+    }
+    else
+    {
+        largest = y;
+        medium = x;
+        if (z >= y)
+        {
+            smallest = medium;
+            medium = largest;
+            largest = z;
+        }
+        else if (x <= z && z < y)
+        {
+            smallest = medium;
+            medium = z;
+        }
+        else
+        {
+            smallest = z;
+        }
+    }
+    cout << smallest << "<=" << medium << "<=" << largest << endl;
+    return 0;
+}
