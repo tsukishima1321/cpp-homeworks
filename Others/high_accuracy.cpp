@@ -1,3 +1,7 @@
+//高精度运算
+//计算正整数加、乘、除的结果，其中除数为int范围，其余数据范围为0<=a<1e1000
+//知识点：数组、字符串
+
 #include <iostream>
 #include <string>
 
@@ -13,7 +17,7 @@ int pow10(int a) {
     return p;
 }
 
-void init(int a[]) {
+void init(int a[N]) {
     string s;
     cin >> s;
     for (int i = 0; i < s.length(); i++) {
@@ -21,7 +25,7 @@ void init(int a[]) {
     }
 }
 
-string render(const int *a) {
+string render(const int a[N]) {
     string res = "";
     bool f = false;
     for (int i = N-1; i >= 0; i--) {
@@ -38,7 +42,7 @@ string render(const int *a) {
     return res;
 }
 
-int add(const int *a,const int *b,int target[]) {
+int add(const int a[N],const int b[N],int target[N]) {
     for (int i = 0; i < N; i++) {
         target[i] += a[i] + b[i];
         if (target[i] > 10) {
@@ -54,7 +58,7 @@ int add(const int *a,const int *b,int target[]) {
     return 0;
 }
 
-int time(const int *a,const int *b, int target[]) {
+int time(const int a[N],const int b[N], int target[N]) {
     for (int i = 0; i < N; i++) {
         int n = 0;
         for (int j = 0; j < N; j++) {
@@ -73,7 +77,7 @@ int time(const int *a,const int *b, int target[]) {
     return 0;
 }
 
-int devide(const int *a, int b, int target[], int& remain) {
+int devide(const int a[N], int b, int target[N], int *remain) {
     int l = 0;
     int b_ = b;
     while (b_) { //获取除数的位数，存入l
@@ -87,14 +91,14 @@ int devide(const int *a, int b, int target[], int& remain) {
         }
     }
     if (i + 1 < l) { //被除数位数小于除数，直接将被除数作为余数输出
-        remain = 0;
+        *remain = 0;
         for (int j = 0; j <= i; j++) {
-            remain += pow10(i - j) * a[i - j];
+            *remain += pow10(i - j) * a[i - j];
         }
         return 0;
     }
     int n; //每次除法余数中最高位的部分
-    int a_front = 0;
+    long long a_front = 0;
     for (int j = 0; j < l; j++) {  //在高位截取被除数与除数位数相同的一段，存入a_front
         a_front += pow10(l - j - 1) * a[i - j];
     }
@@ -105,7 +109,7 @@ int devide(const int *a, int b, int target[], int& remain) {
         a_front = a_front % pow10(l - 1) * 10 + a[j] + pow10(l) * n;
         target[j] = a_front / b;
     }
-    remain = a_front % b;
+    *remain = a_front % b;
     return 0;
 }
 
@@ -122,7 +126,7 @@ int main()
     cin >> d;
     int c[N] = {};
     int r;
-    devide(a, d, c, r);
+    devide(a, d, c, &r);
     cout << "商：" << render(c) << "  余数:" << r << endl;
     system("pause");
     return 0;
