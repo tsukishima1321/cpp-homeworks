@@ -87,7 +87,7 @@ LargeNum operator+(const LargeNum& a,const LargeNum& b){
     int result[N] = {};
     for (int i = 0; i < N; i++) {
         result[i] += a._data[i] + b._data[i];
-        if (result[i] > 10) {
+        if (result[i] >= 10) {
             if (i < N - 1) {
                 result[i] %= 10;
                 result[i + 1] += 1;
@@ -123,22 +123,22 @@ LargeNum operator/(const LargeNum& a,int b){
     int result[N] = {};
     int l = 0;
     int b_ = b;
-    while (b_) { //获取除数的位数，存入l
+    while (b_) {
         b_ /= 10;
         l++;
     }
     int i;
-    for (i = N - 1; i >= 0; i--) { //跳过所有前导零，此后i即为a的最高位的位数
+    for (i = N - 1; i >= 0; i--) {
         if (a._data[i] != 0) {
             break;
         }
     }
-    if (i + 1 < l) { //被除数位数小于除数，直接将被除数作为余数输出
+    if (i + 1 < l) {
         return LargeNum();
     }
-    int n; //每次除法余数中最高位的部分
+    int n;
     long long a_front = 0;
-    for (int j = 0; j < l; j++) {  //在高位截取被除数与除数位数相同的一段，存入a_front
+    for (int j = 0; j < l; j++) {
         a_front += LargeNum::pow10(l - j - 1) * a._data[i - j];
     }
     result[i - l + 1] = a_front / b;

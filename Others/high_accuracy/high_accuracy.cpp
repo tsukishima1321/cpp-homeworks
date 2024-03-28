@@ -47,7 +47,7 @@ string render(const int a[N]) {
 int add(const int a[N],const int b[N],int target[N]) {
     for (int i = 0; i < N; i++) {
         target[i] += a[i] + b[i];
-        if (target[i] > 10) {
+        if (target[i] >= 10) {
             if (i < N - 1) {
                 target[i] %= 10;
                 target[i + 1] += 1;

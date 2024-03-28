@@ -6,10 +6,12 @@
 
 class LargeNum{
 public:
+
     enum Error{
         NO_ERR,
         OVERFLOW
     };
+    
     LargeNum();
     LargeNum(unsigned long long a);
     LargeNum(const int a[N]);
