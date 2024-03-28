@@ -135,9 +135,8 @@ int main()
     devide(a, d, c, &r);
     cout << "商：" << render(c) << "  余数:" << r << endl;*/
     LargeNum a;
-    a.FromKeyboard();
     int b;
-    cin>>b;
+    cin>>a>>b;
     cout<<a/b<<"\n"<<a%b<<endl;
     system("pause");
     return 0;

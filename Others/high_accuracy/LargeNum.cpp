@@ -1,5 +1,4 @@
 #include "LargeNum.h"
-#include <iostream>
 
 int LargeNum::pow10(int a){
     int p = 1;
@@ -10,12 +9,23 @@ int LargeNum::pow10(int a){
 }
 
 LargeNum::LargeNum(){
-    error = 0;
+    error = NO_ERR;
     _data = new int[N]{};
 }
 
+LargeNum::LargeNum(long long a){
+    error = NO_ERR;
+    _data = new int[N]{};
+    int i = 0;
+    while(a > 0){
+        _data[i] = a % 10;
+        a /= 10;
+        i++;
+    }
+}
+
 LargeNum::LargeNum(const LargeNum& from){
-    error = 0;
+    error = NO_ERR;
     _data = new int[N]{};
     for(int i=0;i<N;i++){
         this->_data[i] = from._data[i];
@@ -23,20 +33,20 @@ LargeNum::LargeNum(const LargeNum& from){
 }
 
 LargeNum::LargeNum(const int a[N]){
-    error = 0;
+    error = NO_ERR;
     _data = new int[N]{};
     for(int i=0;i<N;i++){
-        this->_data[i] = a[i];
+        _data[i] = a[i];
     }
 }
 
-LargeNum::LargeNum(int e){
+LargeNum::LargeNum(LargeNum::Error e){
     error = e;
 }
 
-void LargeNum::FromKeyboard(){
+void LargeNum::FromKeyboard(std::istream& in){
     std::string s;
-    std::cin >> s;
+    in >> s;
     for (int i = 0; i < s.length(); i++) {
         _data[i] = s[s.length() - i - 1] - '0';
     }
@@ -64,6 +74,11 @@ std::ostream& operator<<(std::ostream& out,const LargeNum& a){
     return out;
 }
 
+std::istream& operator>>(std::istream& in,LargeNum& a){
+    a.FromKeyboard(in);
+    return in;
+}
+
 LargeNum operator+(const LargeNum& a,const LargeNum& b){
     int target[N] = {};
     for (int i = 0; i < N; i++) {
@@ -73,7 +88,7 @@ LargeNum operator+(const LargeNum& a,const LargeNum& b){
                 target[i] %= 10;
                 target[i + 1] += 1;
             } else {
-                return LargeNum(-1);
+                return LargeNum(LargeNum::OVERFLOW);
             }
         }
     }
@@ -87,7 +102,7 @@ LargeNum operator*(const LargeNum& a,const LargeNum& b){
         for (int j = 0; j < N; j++) {
             if (i + j > N - 1 ) {
                 if (a._data[i] * b._data[j] + n > 0) {
-                    return LargeNum(-1); //结果溢出
+                    return LargeNum(LargeNum::OVERFLOW); //结果溢出
                 } else {
                     continue;
                 }

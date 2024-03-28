@@ -1,24 +1,31 @@
-#include <ostream>
+#include <iostream>
 #include <string>
 
 #define N 2000
 
+
 class LargeNum{
 public:
+    enum Error{
+        NO_ERR,
+        OVERFLOW
+    };
     LargeNum();
+    LargeNum(long long a);
     LargeNum(const int a[N]);
     LargeNum(const LargeNum& from);
-    LargeNum(int e);
-    void FromKeyboard();
+    explicit LargeNum(Error e);
+    void FromKeyboard(std::istream& in);
     friend LargeNum operator+(const LargeNum& a,const LargeNum& b);
     friend LargeNum operator*(const LargeNum& a,const LargeNum& b);
     friend LargeNum operator/(const LargeNum& a,int b);
     friend unsigned int operator%(const LargeNum& a,int b);
     friend std::ostream & operator<< (std::ostream &out,const LargeNum& a);
+    friend std::istream & operator>> (std::istream &in,LargeNum& a);
     std::string toString() const;
     static int pow10(int a);
 
-    int error;
+    Error error;
 private:
     int *_data;
 };
