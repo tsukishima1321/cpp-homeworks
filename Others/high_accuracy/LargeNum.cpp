@@ -1,6 +1,6 @@
 #include "LargeNum.h"
 
-long long LargeNum::pow10(int a){
+long long LargeNum::pow10(int a) {
     long long p = 1;
     for (int i = 0; i < a; i++) {
         p *= 10;
@@ -8,47 +8,47 @@ long long LargeNum::pow10(int a){
     return p;
 }
 
-LargeNum::LargeNum(){
+LargeNum::LargeNum() {
     error = NO_ERR;
     _data = new int[N]{};
 }
 
-LargeNum::LargeNum(unsigned long long a){
+LargeNum::LargeNum(unsigned long long a) {
     error = NO_ERR;
     _data = new int[N]{};
     int i = 0;
-    while(a > 0){
+    while (a > 0) {
         _data[i] = a % 10;
         a /= 10;
         i++;
     }
 }
 
-LargeNum::LargeNum(const LargeNum& from){
+LargeNum::LargeNum(const LargeNum &from) {
     error = NO_ERR;
     _data = new int[N]{};
-    for(int i=0;i<N;i++){
+    for (int i = 0; i < N; i++) {
         this->_data[i] = from._data[i];
     }
 }
 
-LargeNum::LargeNum(const int a[N]){
+LargeNum::LargeNum(const int a[N]) {
     error = NO_ERR;
     _data = new int[N]{};
-    for(int i=0;i<N;i++){
+    for (int i = 0; i < N; i++) {
         _data[i] = a[i];
     }
 }
 
-LargeNum::LargeNum(LargeNum::Error e){
+LargeNum::LargeNum(LargeNum::Error e) {
     error = e;
 }
 
-LargeNum::~LargeNum(){
-    delete [] _data;
+LargeNum::~LargeNum() {
+    delete[] _data;
 }
 
-void LargeNum::FromStream(std::istream& in){
+void LargeNum::FromStream(std::istream &in) {
     std::string s;
     in >> s;
     for (int i = 0; i < s.length(); i++) {
@@ -56,10 +56,10 @@ void LargeNum::FromStream(std::istream& in){
     }
 }
 
-std::string LargeNum::toString() const{
+std::string LargeNum::toString() const {
     std::string res = "";
     bool f = false;
-    for (int i = N-1; i >= 0; i--) {
+    for (int i = N - 1; i >= 0; i--) {
         if (!f && _data[i] != 0) {
             f = true;
         }
@@ -73,17 +73,17 @@ std::string LargeNum::toString() const{
     return res;
 }
 
-std::ostream& operator<<(std::ostream& out,const LargeNum& a){
-    out<<a.toString();
+std::ostream &operator<<(std::ostream &out, const LargeNum &a) {
+    out << a.toString();
     return out;
 }
 
-std::istream& operator>>(std::istream& in,LargeNum& a){
+std::istream &operator>>(std::istream &in, LargeNum &a) {
     a.FromStream(in);
     return in;
 }
 
-LargeNum operator+(const LargeNum& a,const LargeNum& b){
+LargeNum operator+(const LargeNum &a, const LargeNum &b) {
     int result[N] = {};
     for (int i = 0; i < N; i++) {
         result[i] += a._data[i] + b._data[i];
@@ -99,12 +99,12 @@ LargeNum operator+(const LargeNum& a,const LargeNum& b){
     return LargeNum(result);
 }
 
-LargeNum operator*(const LargeNum& a,const LargeNum& b){
+LargeNum operator*(const LargeNum &a, const LargeNum &b) {
     int result[N] = {};
     for (int i = 0; i < N; i++) {
         int n = 0;
         for (int j = 0; j < N; j++) {
-            if (i + j > N - 1 ) {
+            if (i + j > N - 1) {
                 if (a._data[i] * b._data[j] + n > 0) {
                     return LargeNum(LargeNum::OVERFLOW);
                 } else {
@@ -119,7 +119,7 @@ LargeNum operator*(const LargeNum& a,const LargeNum& b){
     return LargeNum(result);
 }
 
-LargeNum operator/(const LargeNum& a,int b){
+LargeNum operator/(const LargeNum &a, int b) {
     int result[N] = {};
     int l = 0;
     int b_ = b;
@@ -151,7 +151,7 @@ LargeNum operator/(const LargeNum& a,int b){
     return LargeNum(result);
 }
 
-unsigned int operator%(const LargeNum& a,int b){
+unsigned int operator%(const LargeNum &a, int b) {
     int result[N] = {};
     int l = 0;
     int b_ = b;

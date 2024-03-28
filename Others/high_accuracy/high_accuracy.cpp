@@ -1,13 +1,13 @@
-//高精度运算
-//计算正整数加、乘、除的结果，其中除数为int范围，其余数据范围为0<=a<1e1000
-//知识点：数组、字符串
+// 高精度运算
+// 计算正整数加、乘、除的结果，其中除数为int范围，其余数据范围为0<=a<1e1000
+// 知识点：数组、字符串
 
-//使用VScode编译多文件项目时，将task.json中的${file}替换为${fileDirname}\\*.cpp
+// 使用VScode编译多文件项目时，将task.json中的${file}替换为${fileDirname}\\*.cpp
 
 #include <iostream>
 #include <string>
 
-#define N 2000 //所有高精度数的最大位数
+#define N 2000 // 所有高精度数的最大位数
 
 using namespace std;
 
@@ -30,7 +30,7 @@ void init(int a[N]) {
 string render(const int a[N]) {
     string res = "";
     bool f = false;
-    for (int i = N-1; i >= 0; i--) {
+    for (int i = N - 1; i >= 0; i--) {
         if (!f && a[i] != 0) {
             f = true;
         }
@@ -44,7 +44,7 @@ string render(const int a[N]) {
     return res;
 }
 
-int add(const int a[N],const int b[N],int target[N]) {
+int add(const int a[N], const int b[N], int target[N]) {
     for (int i = 0; i < N; i++) {
         target[i] += a[i] + b[i];
         if (target[i] >= 10) {
@@ -52,7 +52,7 @@ int add(const int a[N],const int b[N],int target[N]) {
                 target[i] %= 10;
                 target[i + 1] += 1;
             } else {
-                //结果溢出  
+                // 结果溢出
                 return -1;
             }
         }
@@ -60,13 +60,13 @@ int add(const int a[N],const int b[N],int target[N]) {
     return 0;
 }
 
-int time(const int a[N],const int b[N], int target[N]) {
+int time(const int a[N], const int b[N], int target[N]) {
     for (int i = 0; i < N; i++) {
         int n = 0;
         for (int j = 0; j < N; j++) {
-            if (i + j > N - 1 ) {
+            if (i + j > N - 1) {
                 if (a[i] * b[j] + n > 0) {
-                    return -1; //结果溢出
+                    return -1; // 结果溢出
                 } else {
                     continue;
                 }
@@ -82,26 +82,26 @@ int time(const int a[N],const int b[N], int target[N]) {
 int devide(const int a[N], int b, int target[N], int *remain) {
     int l = 0;
     int b_ = b;
-    while (b_) { //获取除数的位数，存入l
+    while (b_) { // 获取除数的位数，存入l
         b_ /= 10;
         l++;
     }
     int i;
-    for (i = N - 1; i >= 0; i--) { //跳过所有前导零，此后i即为a的最高位的位数
+    for (i = N - 1; i >= 0; i--) { // 跳过所有前导零，此后i即为a的最高位的位数
         if (a[i] != 0) {
             break;
         }
     }
-    if (i + 1 < l) { //被除数位数小于除数，直接将被除数作为余数输出
+    if (i + 1 < l) { // 被除数位数小于除数，直接将被除数作为余数输出
         *remain = 0;
         for (int j = 0; j <= i; j++) {
             *remain += pow10(i - j) * a[i - j];
         }
         return 0;
     }
-    int n; //每次除法余数中最高位的部分
+    int n; // 每次除法余数中最高位的部分
     long long a_front = 0;
-    for (int j = 0; j < l; j++) {  //在高位截取被除数与除数位数相同的一段，存入a_front
+    for (int j = 0; j < l; j++) { // 在高位截取被除数与除数位数相同的一段，存入a_front
         a_front += pow10(l - j - 1) * a[i - j];
     }
     target[i - l + 1] = a_front / b;
@@ -115,11 +115,10 @@ int devide(const int a[N], int b, int target[N], int *remain) {
     return 0;
 }
 
-//面向对象的写法：
+// 面向对象的写法：
 #include "LargeNum.h"
 
-int main()
-{
+int main() {
 #ifdef _WIN32
     system("chcp 65001");
 #endif
@@ -135,9 +134,12 @@ int main()
     cout << "商：" << render(c) << "  余数:" << r << endl;*/
     LargeNum a;
     int b;
-    cin>>a>>b;
-    cout<<"a/b:"<<a/b<<"\n"<<"a%b:"<<a%b<<"\n"<<endl;  //调用重载运算符进行除法运算和输出
-    cout<<"a+b:"<<a+b<<"\n"<<"a*b:"<<a*b<<endl;  //直接与常规类型整数进行加、乘 *隐式调用了LargeNum(unsigned long long)*
+    cin >> a >> b;
+    cout << "a/b:" << a / b << "\n"
+         << "a%b:" << a % b << "\n"
+         << endl; // 调用重载运算符进行除法运算和输出
+    cout << "a+b:" << a + b << "\n"
+         << "a*b:" << a * b << endl; // 直接与常规类型整数进行加、乘 **隐式调用了LargeNum(unsigned long long)**
     system("pause");
     return 0;
 }
