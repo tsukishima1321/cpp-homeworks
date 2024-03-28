@@ -1,7 +1,7 @@
 #include "LargeNum.h"
 
-int LargeNum::pow10(int a){
-    int p = 1;
+long long LargeNum::pow10(int a){
+    long long p = 1;
     for (int i = 0; i < a; i++) {
         p *= 10;
     }
@@ -13,7 +13,7 @@ LargeNum::LargeNum(){
     _data = new int[N]{};
 }
 
-LargeNum::LargeNum(long long a){
+LargeNum::LargeNum(unsigned long long a){
     error = NO_ERR;
     _data = new int[N]{};
     int i = 0;
@@ -44,7 +44,11 @@ LargeNum::LargeNum(LargeNum::Error e){
     error = e;
 }
 
-void LargeNum::FromKeyboard(std::istream& in){
+LargeNum::~LargeNum(){
+    delete [] _data;
+}
+
+void LargeNum::FromStream(std::istream& in){
     std::string s;
     in >> s;
     for (int i = 0; i < s.length(); i++) {
@@ -75,48 +79,48 @@ std::ostream& operator<<(std::ostream& out,const LargeNum& a){
 }
 
 std::istream& operator>>(std::istream& in,LargeNum& a){
-    a.FromKeyboard(in);
+    a.FromStream(in);
     return in;
 }
 
 LargeNum operator+(const LargeNum& a,const LargeNum& b){
-    int target[N] = {};
+    int result[N] = {};
     for (int i = 0; i < N; i++) {
-        target[i] += a._data[i] + b._data[i];
-        if (target[i] > 10) {
+        result[i] += a._data[i] + b._data[i];
+        if (result[i] > 10) {
             if (i < N - 1) {
-                target[i] %= 10;
-                target[i + 1] += 1;
+                result[i] %= 10;
+                result[i + 1] += 1;
             } else {
                 return LargeNum(LargeNum::OVERFLOW);
             }
         }
     }
-    return LargeNum(target);
+    return LargeNum(result);
 }
 
 LargeNum operator*(const LargeNum& a,const LargeNum& b){
-    int target[N] = {};
+    int result[N] = {};
     for (int i = 0; i < N; i++) {
         int n = 0;
         for (int j = 0; j < N; j++) {
             if (i + j > N - 1 ) {
                 if (a._data[i] * b._data[j] + n > 0) {
-                    return LargeNum(LargeNum::OVERFLOW); //结果溢出
+                    return LargeNum(LargeNum::OVERFLOW);
                 } else {
                     continue;
                 }
             }
-            target[i + j] += a._data[i] * b._data[j] + n;
-            n = target[i + j] / 10;
-            target[i + j] %= 10;
+            result[i + j] += a._data[i] * b._data[j] + n;
+            n = result[i + j] / 10;
+            result[i + j] %= 10;
         }
     }
-    return LargeNum(target);
+    return LargeNum(result);
 }
 
 LargeNum operator/(const LargeNum& a,int b){
-    int target[N] = {};
+    int result[N] = {};
     int l = 0;
     int b_ = b;
     while (b_) { //获取除数的位数，存入l
@@ -137,18 +141,18 @@ LargeNum operator/(const LargeNum& a,int b){
     for (int j = 0; j < l; j++) {  //在高位截取被除数与除数位数相同的一段，存入a_front
         a_front += LargeNum::pow10(l - j - 1) * a._data[i - j];
     }
-    target[i - l + 1] = a_front / b;
+    result[i - l + 1] = a_front / b;
     for (int j = i - l; j >= 0; j--) {
         a_front %= b;
         n = a_front / LargeNum::pow10(l - 1);
         a_front = a_front % LargeNum::pow10(l - 1) * 10 + a._data[j] + LargeNum::pow10(l) * n;
-        target[j] = a_front / b;
+        result[j] = a_front / b;
     }
-    return LargeNum(target);
+    return LargeNum(result);
 }
 
 unsigned int operator%(const LargeNum& a,int b){
-    int target[N] = {};
+    int result[N] = {};
     int l = 0;
     int b_ = b;
     int remain = 0;
@@ -173,12 +177,12 @@ unsigned int operator%(const LargeNum& a,int b){
     for (int j = 0; j < l; j++) {
         a_front += LargeNum::pow10(l - j - 1) * a._data[i - j];
     }
-    target[i - l + 1] = a_front / b;
+    result[i - l + 1] = a_front / b;
     for (int j = i - l; j >= 0; j--) {
         a_front %= b;
         n = a_front / LargeNum::pow10(l - 1);
         a_front = a_front % LargeNum::pow10(l - 1) * 10 + a._data[j] + LargeNum::pow10(l) * n;
-        target[j] = a_front / b;
+        result[j] = a_front / b;
     }
     remain = a_front % b;
     return remain;

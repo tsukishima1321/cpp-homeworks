@@ -11,21 +11,27 @@ public:
         OVERFLOW
     };
     LargeNum();
-    LargeNum(long long a);
+    LargeNum(unsigned long long a);
     LargeNum(const int a[N]);
     LargeNum(const LargeNum& from);
     explicit LargeNum(Error e);
-    void FromKeyboard(std::istream& in);
+    ~LargeNum();
+
+    void FromStream(std::istream& in);
+    friend std::istream & operator>> (std::istream& in,LargeNum& a);
+
+    std::string toString() const;
+    friend std::ostream & operator<< (std::ostream& out,const LargeNum& a);
+
     friend LargeNum operator+(const LargeNum& a,const LargeNum& b);
     friend LargeNum operator*(const LargeNum& a,const LargeNum& b);
     friend LargeNum operator/(const LargeNum& a,int b);
     friend unsigned int operator%(const LargeNum& a,int b);
-    friend std::ostream & operator<< (std::ostream &out,const LargeNum& a);
-    friend std::istream & operator>> (std::istream &in,LargeNum& a);
-    std::string toString() const;
-    static int pow10(int a);
+
+    static long long pow10(int a);
 
     Error error;
+
 private:
     int *_data;
 };

@@ -116,7 +116,6 @@ int devide(const int a[N], int b, int target[N], int *remain) {
 }
 
 //面向对象的写法：
-//知识点：基本class操作、运算符重载、构造函数
 #include "LargeNum.h"
 
 int main()
@@ -137,7 +136,8 @@ int main()
     LargeNum a;
     int b;
     cin>>a>>b;
-    cout<<a/b<<"\n"<<a%b<<endl;
+    cout<<"a/b:"<<a/b<<"\n"<<"a%b:"<<a%b<<"\n"<<endl;  //调用重载运算符进行除法运算和输出
+    cout<<"a+b:"<<a+b<<"\n"<<"a*b:"<<a*b<<endl;  //直接与常规类型整数进行加、乘 *隐式调用了LargeNum(unsigned long long)*
     system("pause");
     return 0;
 }
