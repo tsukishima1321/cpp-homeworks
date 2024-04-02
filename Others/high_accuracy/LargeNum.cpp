@@ -72,7 +72,6 @@ LargeNum::LargeNum(LargeNum::Error e) {
 LargeNum::~LargeNum() {
     if (_data != nullptr) {
         delete[] _data;
-        std::cout << "dep" << std::endl;
     }
 }
 
