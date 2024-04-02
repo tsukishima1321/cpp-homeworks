@@ -49,13 +49,8 @@ LargeNum &LargeNum::operator=(const LargeNum &from) {
 
 LargeNum &LargeNum::operator=(LargeNum &&from) {
     delete[] this->_data;
-    if (from.error == LargeNum::NO_ERR) {
-        this->_data = from._data;
-        from._data = nullptr;
-    } else {
-        this->error = from.error;
-        from.~LargeNum();
-    }
+    this->_data = from._data;
+    from._data = nullptr;
     return *this;
 }
 
@@ -85,6 +80,17 @@ void LargeNum::FromStream(std::istream &in) {
 
 std::string LargeNum::toString() const {
     std::string res = "";
+    if (error != LargeNum::NO_ERR) {
+        switch (error) {
+        case LargeNum::OVERFLOW:
+            res += "OVERFLOW";
+            break;
+        default:
+            res += "UNKNOW_ERROR";
+            break;
+        }
+        return res;
+    }
     bool f = false;
     for (int i = MAX_N - 1; i >= 0; i--) {
         if (!f && _data[i] != 0) {
@@ -101,6 +107,17 @@ std::string LargeNum::toString() const {
 }
 
 std::ostream &operator<<(std::ostream &out, const LargeNum &a) {
+    if (a.error != LargeNum::NO_ERR) {
+        switch (a.error) {
+        case LargeNum::OVERFLOW:
+            out << "OVERFLOW";
+            break;
+        default:
+            out << "UNKNOW_ERROR";
+            break;
+        }
+        return out;
+    }
     out << a.toString();
     return out;
 }
