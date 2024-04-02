@@ -13,9 +13,7 @@ LargeNum::LargeNum() {
     _data = new int[N]{};
 }
 
-LargeNum::LargeNum(unsigned long long a) {
-    error = NO_ERR;
-    _data = new int[N]{};
+LargeNum::LargeNum(unsigned long long a) : LargeNum::LargeNum() {
     int i = 0;
     while (a > 0) {
         _data[i] = a % 10;
@@ -24,17 +22,13 @@ LargeNum::LargeNum(unsigned long long a) {
     }
 }
 
-LargeNum::LargeNum(const LargeNum &from) {
-    error = NO_ERR;
-    _data = new int[N]{};
+LargeNum::LargeNum(const LargeNum &from) : LargeNum::LargeNum() {
     for (int i = 0; i < N; i++) {
         this->_data[i] = from._data[i];
     }
 }
 
-LargeNum::LargeNum(const int a[N]) {
-    error = NO_ERR;
-    _data = new int[N]{};
+LargeNum::LargeNum(const int a[N]) : LargeNum::LargeNum() {
     for (int i = 0; i < N; i++) {
         _data[i] = a[i];
     }
