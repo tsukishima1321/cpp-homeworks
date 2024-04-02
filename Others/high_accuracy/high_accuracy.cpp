@@ -132,14 +132,10 @@ int main() {
     int r;
     devide(a, d, c, &r);
     cout << "商：" << render(c) << "  余数:" << r << endl;*/
-    LargeNum a;
-    int b;
-    cin >> a >> b;
-    cout << "a/b:" << a / b << "\n"
-         << "a%b:" << a % b << "\n"
-         << endl; // 调用重载运算符进行除法运算和输出
-    cout << "a+b:" << a + b << "\n"
-         << "a*b:" << a * b << endl; // 直接与常规类型整数进行加、乘 **隐式调用了LargeNum(unsigned long long)**
+    LargeNum a = 114514;
+    LargeNum c = 114514;
+    a = (a + c);
+    cout << a << endl;
     system("pause");
     return 0;
 }

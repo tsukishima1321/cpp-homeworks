@@ -28,6 +28,37 @@ LargeNum::LargeNum(const LargeNum &from) : LargeNum::LargeNum() {
     }
 }
 
+LargeNum::LargeNum(const LargeNum &&from) {
+    if (from.error == LargeNum::NO_ERR) {
+        this->_data = from._data;
+    } else {
+        this->error = from.error;
+        from.~LargeNum();
+    }
+}
+
+LargeNum &LargeNum::operator=(const LargeNum &from) {
+    if (&from == this) {
+        return *this;
+    }
+    for (int i = 0; i < MAX_N; i++) {
+        this->_data[i] = from._data[i];
+    }
+    return *this;
+}
+
+LargeNum &LargeNum::operator=(LargeNum &&from) {
+    delete[] this->_data;
+    if (from.error == LargeNum::NO_ERR) {
+        this->_data = from._data;
+        from._data = nullptr;
+    } else {
+        this->error = from.error;
+        from.~LargeNum();
+    }
+    return *this;
+}
+
 LargeNum::LargeNum(const int a[MAX_N]) : LargeNum::LargeNum() {
     for (int i = 0; i < MAX_N; i++) {
         _data[i] = a[i];
@@ -39,7 +70,10 @@ LargeNum::LargeNum(LargeNum::Error e) {
 }
 
 LargeNum::~LargeNum() {
-    delete[] _data;
+    if (_data != nullptr) {
+        delete[] _data;
+        std::cout << "dep" << std::endl;
+    }
 }
 
 void LargeNum::FromStream(std::istream &in) {
