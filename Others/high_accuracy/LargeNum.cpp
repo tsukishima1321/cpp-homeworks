@@ -24,15 +24,16 @@ LargeNum::LargeNum(unsigned long long a) : LargeNum::LargeNum() {
 
 LargeNum::LargeNum(const LargeNum &from) : LargeNum::LargeNum() {
     for (int i = 0; i < MAX_N; i++) {
-        this->_data[i] = from._data[i];
+        _data[i] = from._data[i];
     }
 }
 
 LargeNum::LargeNum(const LargeNum &&from) {
     if (from.error == LargeNum::NO_ERR) {
-        this->_data = from._data;
+        _data = from._data;
+        error = NO_ERR;
     } else {
-        this->error = from.error;
+        error = from.error;
         from.~LargeNum();
     }
 }
@@ -42,14 +43,14 @@ LargeNum &LargeNum::operator=(const LargeNum &from) {
         return *this;
     }
     for (int i = 0; i < MAX_N; i++) {
-        this->_data[i] = from._data[i];
+        _data[i] = from._data[i];
     }
     return *this;
 }
 
 LargeNum &LargeNum::operator=(LargeNum &&from) {
-    delete[] this->_data;
-    this->_data = from._data;
+    delete[] _data;
+    _data = from._data;
     from._data = nullptr;
     return *this;
 }
@@ -80,9 +81,9 @@ void LargeNum::FromStream(std::istream &in) {
 
 std::string LargeNum::toString() const {
     std::string res = "";
-    if (error != LargeNum::NO_ERR) {
+    if (error != NO_ERR) {
         switch (error) {
-        case LargeNum::OVERFLOW:
+        case OVERFLOW:
             res += "OVERFLOW";
             break;
         default:
