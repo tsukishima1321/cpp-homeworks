@@ -14,12 +14,12 @@ public:
     LargeNum(unsigned long long a);
     LargeNum(const int a[MAX_N]);
     LargeNum(const LargeNum &from);
-    LargeNum(const LargeNum &&from);
+    LargeNum(LargeNum &&from);
     explicit LargeNum(Error e);
     ~LargeNum();
 
-    LargeNum& operator=(const LargeNum& from);
-    LargeNum& operator=(LargeNum&& from);
+    LargeNum &operator=(const LargeNum &from);
+    LargeNum &operator=(LargeNum &&from);
 
     void FromStream(std::istream &in);
     friend std::istream &operator>>(std::istream &in, LargeNum &a);

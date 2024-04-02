@@ -136,6 +136,11 @@ int main() {
     LargeNum c = 114514;
     a = (a + c);
     cout << a << endl;
+    LargeNum d = a + c;
+    cout << d << endl;
+    LargeNum e;
+    e = a + c;
+    cout << e << endl;
     system("pause");
     return 0;
 }
