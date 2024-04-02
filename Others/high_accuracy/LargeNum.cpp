@@ -10,7 +10,7 @@ long long LargeNum::pow10(int a) {
 
 LargeNum::LargeNum() {
     error = NO_ERR;
-    _data = new int[N]{};
+    _data = new int[MAX_N]{};
 }
 
 LargeNum::LargeNum(unsigned long long a) : LargeNum::LargeNum() {
@@ -23,13 +23,13 @@ LargeNum::LargeNum(unsigned long long a) : LargeNum::LargeNum() {
 }
 
 LargeNum::LargeNum(const LargeNum &from) : LargeNum::LargeNum() {
-    for (int i = 0; i < N; i++) {
+    for (int i = 0; i < MAX_N; i++) {
         this->_data[i] = from._data[i];
     }
 }
 
-LargeNum::LargeNum(const int a[N]) : LargeNum::LargeNum() {
-    for (int i = 0; i < N; i++) {
+LargeNum::LargeNum(const int a[MAX_N]) : LargeNum::LargeNum() {
+    for (int i = 0; i < MAX_N; i++) {
         _data[i] = a[i];
     }
 }
@@ -53,7 +53,7 @@ void LargeNum::FromStream(std::istream &in) {
 std::string LargeNum::toString() const {
     std::string res = "";
     bool f = false;
-    for (int i = N - 1; i >= 0; i--) {
+    for (int i = MAX_N - 1; i >= 0; i--) {
         if (!f && _data[i] != 0) {
             f = true;
         }
@@ -78,11 +78,11 @@ std::istream &operator>>(std::istream &in, LargeNum &a) {
 }
 
 LargeNum operator+(const LargeNum &a, const LargeNum &b) {
-    int result[N] = {};
-    for (int i = 0; i < N; i++) {
+    int result[MAX_N] = {};
+    for (int i = 0; i < MAX_N; i++) {
         result[i] += a._data[i] + b._data[i];
         if (result[i] >= 10) {
-            if (i < N - 1) {
+            if (i < MAX_N - 1) {
                 result[i] %= 10;
                 result[i + 1] += 1;
             } else {
@@ -94,11 +94,11 @@ LargeNum operator+(const LargeNum &a, const LargeNum &b) {
 }
 
 LargeNum operator*(const LargeNum &a, const LargeNum &b) {
-    int result[N] = {};
-    for (int i = 0; i < N; i++) {
+    int result[MAX_N] = {};
+    for (int i = 0; i < MAX_N; i++) {
         int n = 0;
-        for (int j = 0; j < N; j++) {
-            if (i + j > N - 1) {
+        for (int j = 0; j < MAX_N; j++) {
+            if (i + j > MAX_N - 1) {
                 if (a._data[i] * b._data[j] + n > 0) {
                     return LargeNum(LargeNum::OVERFLOW);
                 } else {
@@ -114,7 +114,7 @@ LargeNum operator*(const LargeNum &a, const LargeNum &b) {
 }
 
 LargeNum operator/(const LargeNum &a, int b) {
-    int result[N] = {};
+    int result[MAX_N] = {};
     int l = 0;
     int b_ = b;
     while (b_) {
@@ -122,7 +122,7 @@ LargeNum operator/(const LargeNum &a, int b) {
         l++;
     }
     int i;
-    for (i = N - 1; i >= 0; i--) {
+    for (i = MAX_N - 1; i >= 0; i--) {
         if (a._data[i] != 0) {
             break;
         }
@@ -146,7 +146,7 @@ LargeNum operator/(const LargeNum &a, int b) {
 }
 
 unsigned int operator%(const LargeNum &a, int b) {
-    int result[N] = {};
+    int result[MAX_N] = {};
     int l = 0;
     int b_ = b;
     int remain = 0;
@@ -155,7 +155,7 @@ unsigned int operator%(const LargeNum &a, int b) {
         l++;
     }
     int i;
-    for (i = N - 1; i >= 0; i--) {
+    for (i = MAX_N - 1; i >= 0; i--) {
         if (a._data[i] != 0) {
             break;
         }

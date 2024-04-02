@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#define N 2000
+#define MAX_N 2000
 
 class LargeNum {
 public:
@@ -12,7 +12,7 @@ public:
 
     LargeNum();
     LargeNum(unsigned long long a);
-    LargeNum(const int a[N]);
+    LargeNum(const int a[MAX_N]);
     LargeNum(const LargeNum &from);
     explicit LargeNum(Error e);
     ~LargeNum();
