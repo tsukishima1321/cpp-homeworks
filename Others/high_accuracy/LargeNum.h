@@ -11,8 +11,9 @@ public:
     };
 
     LargeNum();
-    LargeNum(unsigned long long a);
+    LargeNum(long long a);
     LargeNum(const int a[MAX_N]);
+    LargeNum(const int a[MAX_N], bool sg);
     LargeNum(const LargeNum &from);
     LargeNum(LargeNum &&from);
     explicit LargeNum(Error e);
@@ -27,10 +28,12 @@ public:
     std::string toString() const;
     friend std::ostream &operator<<(std::ostream &out, const LargeNum &a);
 
+    LargeNum operator-() const;
     friend LargeNum operator+(const LargeNum &a, const LargeNum &b);
+    friend LargeNum operator-(const LargeNum &a, const LargeNum &b);
     friend LargeNum operator*(const LargeNum &a, const LargeNum &b);
     friend LargeNum operator/(const LargeNum &a, int b);
-    friend unsigned int operator%(const LargeNum &a, int b);
+    friend int operator%(const LargeNum &a, int b);
 
     static long long pow10(int a);
 
@@ -38,4 +41,5 @@ public:
 
 private:
     int *_data;
+    bool sign;
 };

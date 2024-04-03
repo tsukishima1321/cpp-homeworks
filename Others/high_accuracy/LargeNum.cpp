@@ -10,11 +10,16 @@ long long LargeNum::pow10(int a) {
 
 LargeNum::LargeNum() {
     error = NO_ERR;
+    sign = false;
     _data = new int[MAX_N]{};
 }
 
-LargeNum::LargeNum(unsigned long long a) : LargeNum::LargeNum() {
+LargeNum::LargeNum(long long a) : LargeNum::LargeNum() {
     int i = 0;
+    if (a < 0) {
+        a = -a;
+        sign = true;
+    }
     while (a > 0) {
         _data[i] = a % 10;
         a /= 10;
@@ -26,11 +31,13 @@ LargeNum::LargeNum(const LargeNum &from) : LargeNum::LargeNum() {
     for (int i = 0; i < MAX_N; i++) {
         _data[i] = from._data[i];
     }
+    sign = from.sign;
 }
 
 LargeNum::LargeNum(LargeNum &&from) {
     error = from.error;
     _data = from._data;
+    sign = from.sign;
     from._data = nullptr;
 }
 
@@ -38,6 +45,13 @@ LargeNum::LargeNum(const int a[MAX_N]) : LargeNum::LargeNum() {
     for (int i = 0; i < MAX_N; i++) {
         _data[i] = a[i];
     }
+}
+
+LargeNum::LargeNum(const int a[MAX_N], bool sg) : LargeNum::LargeNum() {
+    for (int i = 0; i < MAX_N; i++) {
+        _data[i] = a[i];
+    }
+    sign = sg;
 }
 
 LargeNum::LargeNum(LargeNum::Error e) {
@@ -65,12 +79,14 @@ LargeNum &LargeNum::operator=(const LargeNum &from) {
     for (int i = 0; i < MAX_N; i++) {
         _data[i] = from._data[i];
     }
+    sign = from.sign;
     return *this;
 }
 
 LargeNum &LargeNum::operator=(LargeNum &&from) {
     delete[] _data;
     _data = from._data;
+    sign = from.sign;
     error = from.error;
     from._data = nullptr;
     return *this;
@@ -88,6 +104,9 @@ std::string LargeNum::toString() const {
             break;
         }
         return res;
+    }
+    if (sign) {
+        res += "-";
     }
     bool f = false;
     for (int i = MAX_N - 1; i >= 0; i--) {
@@ -125,10 +144,17 @@ std::istream &operator>>(std::istream &in, LargeNum &a) {
     return in;
 }
 
+LargeNum LargeNum::operator-() const {
+    LargeNum res(*this);
+    res.sign ^= true;
+    return res;
+}
+
 LargeNum operator+(const LargeNum &a, const LargeNum &b) {
     int result[MAX_N] = {};
+    bool sg = false;
     for (int i = 0; i < MAX_N; i++) {
-        result[i] += a._data[i] + b._data[i];
+        result[i] += (a.sign ? -1 : 1) * a._data[i] + (b.sign ? -1 : 1) * b._data[i];
         if (result[i] >= 10) {
             if (i < MAX_N - 1) {
                 result[i] %= 10;
@@ -137,12 +163,34 @@ LargeNum operator+(const LargeNum &a, const LargeNum &b) {
                 return LargeNum(LargeNum::OVERFLOW);
             }
         }
+        if (result[i] < 0) {
+            if (i < MAX_N - 1) {
+                result[i] = result[i] + 10;
+                result[i + 1] -= 1;
+            } else {
+                sg = true;
+            }
+        }
     }
-    return LargeNum(result);
+    if (sg) {
+        for (int i = MAX_N - 1; i >= 0; i--) {
+            result[i] = 10 - result[i];
+            if (result[i] == 11 || result[i] == 0) {
+                result[i] = 0;
+                result[i - 1] += 1;
+            }
+        }
+    }
+    return LargeNum(result, sg);
+}
+
+LargeNum operator-(const LargeNum &a, const LargeNum &b) {
+    return a + -b;
 }
 
 LargeNum operator*(const LargeNum &a, const LargeNum &b) {
     int result[MAX_N] = {};
+    bool sg = a.sign ^ b.sign;
     for (int i = 0; i < MAX_N; i++) {
         int n = 0;
         for (int j = 0; j < MAX_N; j++) {
@@ -158,14 +206,20 @@ LargeNum operator*(const LargeNum &a, const LargeNum &b) {
             result[i + j] %= 10;
         }
     }
-    return LargeNum(result);
+    return LargeNum(result, sg);
 }
 
 LargeNum operator/(const LargeNum &a, int b) {
     int result[MAX_N] = {};
     int l = 0;
+    bool sg;
+    bool sign_b = b < 0;
+    if (sign_b) {
+        b = -b;
+    }
+    sg = a.sign ^ sign_b;
     int b_ = b;
-    while (b_) {
+    while (b_ > 0) {
         b_ /= 10;
         l++;
     }
@@ -190,12 +244,16 @@ LargeNum operator/(const LargeNum &a, int b) {
         a_front = a_front % LargeNum::pow10(l - 1) * 10 + a._data[j] + LargeNum::pow10(l) * n;
         result[j] = a_front / b;
     }
-    return LargeNum(result);
+    return LargeNum(result, sg);
 }
 
-unsigned int operator%(const LargeNum &a, int b) {
+int operator%(const LargeNum &a, int b) {
     int result[MAX_N] = {};
     int l = 0;
+    bool sign_b = b < 0;
+    if (sign_b) {
+        b = -b;
+    }
     int b_ = b;
     int remain = 0;
     while (b_) {
@@ -227,5 +285,12 @@ unsigned int operator%(const LargeNum &a, int b) {
         result[j] = a_front / b;
     }
     remain = a_front % b;
+    if (a.sign) {
+        remain = b - remain;
+    }
+    if (sign_b) {
+        remain = b - remain;
+        remain = -remain;
+    }
     return remain;
 }
