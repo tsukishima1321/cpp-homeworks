@@ -31,7 +31,7 @@ int main() {
     cin >> offset;
     int b[10] = {};
     for (int i = 0; i < 10; i++) {
-        b[i] = a[(i + offset) % 10];
+        b[i] = a[(i - offset + 10) % 10];
         cout << b[i] << " ";
     }
     cout << endl;
