@@ -44,13 +44,13 @@ using namespace std;
 
 int count = 0;
 
-void show(vector<int> *board) {
+void show(const vector<int> &board) {
     count++;
     cout << "解法" << count << ":" << endl;
-    int n = board->size();
+    int n = board.size();
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            if (j == (*board)[i]) {
+            if (j == board[i]) {
                 cout << "Q ";
             } else {
                 cout << "_ ";
@@ -80,7 +80,7 @@ void loop(int n, int col, std::vector<int> board) {
             vector<int> b_ = board;
             b_.insert(b_.begin(), i);
             if (col == n - 1) {
-                show(&b_);
+                show(b_);
             } else {
                 loop(n, col + 1, b_);
             }
@@ -94,7 +94,7 @@ vector<int> b = {-10, -10, -10, -10, -10, -10, -10, -10};
 
 void rec(int n) {
     if (n == 8) {
-        show(&b);
+        show(b);
         return;
     }
     for (int j = 0; j < 8; j++) {
@@ -102,19 +102,15 @@ void rec(int n) {
         bool safe = true;
         for (int k = n - 1; k >= 0; k--) {
             int d = n - k;
-            if (j != b[k] && (j + d) != b[k] && (j - d) != b[k]) {
-
-            } else {
+            if (j == b[k] || (j + d) == b[k] || (j - d) == b[k]) {
                 safe = false;
                 break;
             }
         }
         if (safe) {
             rec(n + 1);
-            b[n] = -10;
-        } else {
-            b[n] = -10;
         }
+        b[n] = -10;
     }
 }
 
