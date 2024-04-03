@@ -133,14 +133,15 @@ int main() {
     devide(a, d, c, &r);
     cout << "商：" << render(c) << "  余数:" << r << endl;*/
     LargeNum a;
-    LargeNum c;
-    int b;
-    cin >> a >> c >> b;
-    cout << "a+c:" << a + c << endl;
-    cout << "a-c:" << a - c << endl;
-    cout << "a*c:" << a * c << endl;
-    cout << "a/b:" << a / b << endl;
-    cout << "a%b:" << a % b << endl;
+    LargeNum b;
+    int c;
+    cin >> a >> b >> c;
+    cout << "a+b:" << a + b << endl;
+    cout << "a-b:" << a - b << endl;
+    cout << "a*b:" << a * b << endl;
+    cout << "a/c:" << a / c << endl;
+    cout << "a%c:" << a % c << endl;
+    cout << (a > b) << (a < b) << (a >= b) << (a <= b) << (a == b);
     system("pause");
     return 0;
 }

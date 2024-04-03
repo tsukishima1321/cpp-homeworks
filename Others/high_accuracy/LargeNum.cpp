@@ -302,3 +302,85 @@ int operator%(const LargeNum &a, int b) {
     }
     return remain;
 }
+
+LargeNum LargeNum::operator+=(const LargeNum &a) {
+    return *this = *this + a;
+}
+
+LargeNum LargeNum::operator-=(const LargeNum &a) {
+    return *this = *this - a;
+}
+
+LargeNum LargeNum::operator*=(const LargeNum &a) {
+    return *this = *this * a;
+}
+
+LargeNum LargeNum::operator/=(int a) {
+    return *this = *this / a;
+}
+
+LargeNum LargeNum::operator%=(int a) {
+    return *this = LargeNum(*this % a);
+}
+
+bool operator==(const LargeNum &a, const LargeNum &b) {
+    if (a.sign != b.sign) {
+        return false;
+    }
+    for (int i = 0; i < MAX_N; i++) {
+        if (a._data[i] != b._data[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool operator!=(const LargeNum &a, const LargeNum &b) {
+    return !(a == b);
+}
+
+bool operator>(const LargeNum &a, const LargeNum &b) {
+    if (!a.sign && b.sign) {
+        return true;
+    }
+    if (a.sign && !b.sign) {
+        return false;
+    }
+    for (int i = 0; i < MAX_N; i++) {
+        if (a._data[i] != b._data[i]) {
+            if (a.sign) {
+                return a._data[i] < b._data[i];
+            } else {
+                return a._data[i] > b._data[i];
+            }
+        }
+    }
+    return false;
+}
+
+bool operator>=(const LargeNum &a, const LargeNum &b) {
+    if (!a.sign && b.sign) {
+        return true;
+    }
+    if (a.sign && !b.sign) {
+        return false;
+    }
+    for (int i = 0; i < MAX_N; i++) {
+        if (a._data[i] != b._data[i]) {
+            if (a.sign) {
+                return a._data[i] < b._data[i];
+            } else {
+                return a._data[i] > b._data[i];
+            }
+        }
+    }
+    return true;
+}
+
+bool operator<=(const LargeNum &a,const LargeNum &b){
+    return !(a>b);
+}
+
+bool operator<(const LargeNum &a,const LargeNum &b){
+    return !(a>=b);
+}

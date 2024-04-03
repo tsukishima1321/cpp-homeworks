@@ -35,6 +35,19 @@ public:
     friend LargeNum operator/(const LargeNum &a, int b);
     friend int operator%(const LargeNum &a, int b);
 
+    LargeNum operator+=(const LargeNum &a);
+    LargeNum operator-=(const LargeNum &a);
+    LargeNum operator*=(const LargeNum &a);
+    LargeNum operator/=(int a);
+    LargeNum operator%=(int a);
+
+    friend bool operator==(const LargeNum &a, const LargeNum &b);
+    friend bool operator!=(const LargeNum &a, const LargeNum &b);
+    friend bool operator>(const LargeNum &a, const LargeNum &b);
+    friend bool operator<(const LargeNum &a, const LargeNum &b);
+    friend bool operator>=(const LargeNum &a, const LargeNum &b);
+    friend bool operator<=(const LargeNum &a, const LargeNum &b);
+
     static long long pow10(int a);
 
     Error error;
