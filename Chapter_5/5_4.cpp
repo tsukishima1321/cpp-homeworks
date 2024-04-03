@@ -2,8 +2,6 @@
 // 按由大到小的顺序输入10个int类型的数据将其存放在一个一维数组中，
 // 再输入一个整数到变量x，用二分法查找x是否是数组中的元素，若是，输出其在数组中的位置，否则输出不在数组中的提示。
 
-#include <cstdlib>
-#include <ctime>
 #include <iostream>
 
 using namespace std;
@@ -17,7 +15,6 @@ int main() {
     system("chcp 65001");
 #endif
 
-    srand(time(0));
     int a[10] = {};
     cout << "请由大到小输入十个整数:" << endl;
     for (int i = 0; i < 10; i++) {
