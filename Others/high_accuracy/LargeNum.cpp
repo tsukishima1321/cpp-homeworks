@@ -28,6 +28,7 @@ LargeNum::LargeNum(long long a) : LargeNum::LargeNum() {
 }
 
 LargeNum::LargeNum(const LargeNum &from) : LargeNum::LargeNum() {
+    error = from.error;
     for (int i = 0; i < MAX_N; i++) {
         _data[i] = from._data[i];
     }
@@ -85,6 +86,7 @@ LargeNum &LargeNum::operator=(const LargeNum &from) {
     for (int i = 0; i < MAX_N; i++) {
         _data[i] = from._data[i];
     }
+    error = from.error;
     sign = from.sign;
     return *this;
 }
