@@ -132,11 +132,15 @@ int main() {
     int r;
     devide(a, d, c, &r);
     cout << "商：" << render(c) << "  余数:" << r << endl;*/
-    LargeNum a = -114514;
-    LargeNum c = -114535;
-    int b = -10;
-    // a = (a + c);
-    cout << a - c << endl;
+    LargeNum a;
+    LargeNum c;
+    int b;
+    cin >> a >> c >> b;
+    cout << "a+c:" << a + c << endl;
+    cout << "a-c:" << a - c << endl;
+    cout << "a*c:" << a * c << endl;
+    cout << "a/b:" << a / b << endl;
+    cout << "a%b:" << a % b << endl;
     system("pause");
     return 0;
 }

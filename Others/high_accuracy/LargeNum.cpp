@@ -67,6 +67,12 @@ LargeNum::~LargeNum() {
 void LargeNum::FromStream(std::istream &in) {
     std::string s;
     in >> s;
+    if (s[0] == '-') {
+        sign = true;
+        s.erase(0, 1);
+    } else {
+        sign = false;
+    }
     for (int i = 0; i < s.length(); i++) {
         _data[i] = s[s.length() - i - 1] - '0';
     }
