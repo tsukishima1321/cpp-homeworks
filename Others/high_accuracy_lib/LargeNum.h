@@ -39,13 +39,13 @@ public:
     friend LargeNum operator/(const LargeNum &a, const LargeNum &b);
     friend LargeNum operator%(const LargeNum &a, const LargeNum &b);
 
-    LargeNum operator+=(const LargeNum &a);
-    LargeNum operator-=(const LargeNum &a);
-    LargeNum operator*=(const LargeNum &a);
-    LargeNum operator/=(int a);
-    LargeNum operator%=(int a);
-    LargeNum operator/=(const LargeNum &a);
-    LargeNum operator%=(const LargeNum &a);
+    LargeNum &operator+=(const LargeNum &a);
+    LargeNum &operator-=(const LargeNum &a);
+    LargeNum &operator*=(const LargeNum &a);
+    LargeNum &operator/=(int a);
+    LargeNum &operator%=(int a);
+    LargeNum &operator/=(const LargeNum &a);
+    LargeNum &operator%=(const LargeNum &a);
 
     friend bool operator==(const LargeNum &a, const LargeNum &b);
     friend bool operator!=(const LargeNum &a, const LargeNum &b);
