@@ -135,12 +135,12 @@ int main() {
     LargeNum a;
     LargeNum b;
     int c;
-    cin >> a >> b >> c;
+    cin >> a >> b;
     cout << "a+b:" << a + b << endl;
     cout << "a-b:" << a - b << endl;
     cout << "a*b:" << a * b << endl;
-    cout << "a/c:" << a / c << endl;
-    cout << "a%c:" << a % c << endl;
+    cout << "a/b:" << a / b << endl;
+    cout << "a%b:" << a % b << endl;
     cout << (a > b) << (a < b) << (a >= b) << (a <= b) << (a == b);
     system("pause");
     return 0;

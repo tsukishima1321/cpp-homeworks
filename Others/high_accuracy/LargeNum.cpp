@@ -214,13 +214,9 @@ LargeNum LargeNum::unsignPlus(const LargeNum &a, const LargeNum &b) {
 }
 
 bool LargeNum::unsignCmp(const LargeNum &a, const LargeNum &b) {
-    for (int i = 0; i < MAX_N; i++) {
+    for (int i = MAX_N - 1; i >= 0; i--) {
         if (a._data[i] != b._data[i]) {
-            if (a.sign) {
-                return a._data[i] < b._data[i];
-            } else {
-                return a._data[i] > b._data[i];
-            }
+            return a._data[i] > b._data[i];
         }
     }
     return false;
@@ -258,7 +254,7 @@ LargeNum LargeNum::unsignMinus(const LargeNum &a, const LargeNum &b) {
             if (i < MAX_N - 1) {
                 result[i] = result[i] + 10;
                 result[i + 1] -= 1;
-            }else{
+            } else {
                 return LargeNum(LargeNum::OVERFLOW);
             }
         }
@@ -288,7 +284,7 @@ LargeNum operator-(const LargeNum &a, const LargeNum &b) {
             return LargeNum::unsignMinus(b, a);
         }
     }
-    return LargeNum(LargeNum::UNKNOWN);
+    return LargeNum(LargeNum::WAIT_WHAT);
 }
 
 LargeNum operator*(const LargeNum &a, const LargeNum &b) {
@@ -348,6 +344,124 @@ LargeNum operator/(const LargeNum &a, int b) {
         result[j] = a_front / b;
     }
     return LargeNum(result, sg);
+}
+
+LargeNum operator/(const LargeNum &a, const LargeNum &b) {
+    int result[MAX_N] = {};
+    int l; // b的位数
+    bool sg;
+    sg = a.sign ^ b.sign;
+    for (l = MAX_N - 1; l >= 0; l--) {
+        if (b._data[l] != 0) {
+            break;
+        }
+    }
+    l++;
+    int i;
+    for (i = MAX_N - 1; i >= 0; i--) {
+        if (a._data[i] != 0) {
+            break;
+        }
+    }
+    if (i + 1 < l) {
+        return LargeNum();
+    }
+    LargeNum a_front;
+    for (int j = 0; j < l; j++) {
+        a_front._data[l - j - 1] = a._data[i - j];
+    }
+    LargeNum c = a_front;
+    int n = 0;
+    while (1) {
+        if (LargeNum::unsignCmp(b, c)) {
+            break;
+        } else {
+            n++;
+        }
+        c = LargeNum::unsignMinus(a_front, b);
+    }
+    result[i - l + 1] = n;
+    for (int j = i - l; j >= 0; j--) {
+        a_front = c;
+        if (a_front._data[MAX_N - 1] > 0) {
+            return LargeNum(LargeNum::OVERFLOW);
+        }
+        for (int k = MAX_N - 2; k >= 0; k--) {
+            a_front._data[k + 1] = a_front._data[k];
+        }
+        a_front._data[0] = a._data[j];
+        n = 0;
+        c = a_front;
+        while (1) {
+            if (LargeNum::unsignCmp(b, c)) {
+                break;
+            } else {
+                n++;
+            }
+            c = LargeNum::unsignMinus(c, b);
+        }
+        result[j] = n;
+    }
+    return LargeNum(result, sg);
+}
+
+LargeNum operator%(const LargeNum &a, const LargeNum &b){
+        int result[MAX_N] = {};
+    int l; // b的位数
+    bool sg;
+    sg = a.sign ^ b.sign;
+    for (l = MAX_N - 1; l >= 0; l--) {
+        if (b._data[l] != 0) {
+            break;
+        }
+    }
+    l++;
+    int i;
+    for (i = MAX_N - 1; i >= 0; i--) {
+        if (a._data[i] != 0) {
+            break;
+        }
+    }
+    if (i + 1 < l) {
+        return LargeNum();
+    }
+    LargeNum a_front;
+    for (int j = 0; j < l; j++) {
+        a_front._data[l - j - 1] = a._data[i - j];
+    }
+    LargeNum c = a_front;
+    int n = 0;
+    while (1) {
+        if (LargeNum::unsignCmp(b, c)) {
+            break;
+        } else {
+            n++;
+        }
+        c = LargeNum::unsignMinus(a_front, b);
+    }
+    result[i - l + 1] = n;
+    for (int j = i - l; j >= 0; j--) {
+        a_front = c;
+        if (a_front._data[MAX_N - 1] > 0) {
+            return LargeNum(LargeNum::OVERFLOW);
+        }
+        for (int k = MAX_N - 2; k >= 0; k--) {
+            a_front._data[k + 1] = a_front._data[k];
+        }
+        a_front._data[0] = a._data[j];
+        n = 0;
+        c = a_front;
+        while (1) {
+            if (LargeNum::unsignCmp(b, c)) {
+                break;
+            } else {
+                n++;
+            }
+            c = LargeNum::unsignMinus(c, b);
+        }
+        result[j] = n;
+    }
+    return c;
 }
 
 int operator%(const LargeNum &a, int b) {
@@ -441,7 +555,7 @@ bool operator>(const LargeNum &a, const LargeNum &b) {
     if (a.sign && !b.sign) {
         return false;
     }
-    for (int i = 0; i < MAX_N; i++) {
+    for (int i = MAX_N - 1; i >= 0; i--) {
         if (a._data[i] != b._data[i]) {
             if (a.sign) {
                 return a._data[i] < b._data[i];
@@ -460,7 +574,7 @@ bool operator>=(const LargeNum &a, const LargeNum &b) {
     if (a.sign && !b.sign) {
         return false;
     }
-    for (int i = 0; i < MAX_N; i++) {
+    for (int i = MAX_N - 1; i >= 0; i--) {
         if (a._data[i] != b._data[i]) {
             if (a.sign) {
                 return a._data[i] < b._data[i];

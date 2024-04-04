@@ -8,7 +8,7 @@ public:
     enum Error {
         NO_ERR,
         OVERFLOW,
-        UNKNOWN,
+        WAIT_WHAT,
     };
 
     LargeNum();
@@ -35,6 +35,8 @@ public:
     friend LargeNum operator*(const LargeNum &a, const LargeNum &b);
     friend LargeNum operator/(const LargeNum &a, int b);
     friend int operator%(const LargeNum &a, int b);
+    friend LargeNum operator/(const LargeNum &a, const LargeNum &b);
+    friend LargeNum operator%(const LargeNum &a, const LargeNum &b);
 
     LargeNum operator+=(const LargeNum &a);
     LargeNum operator-=(const LargeNum &a);
