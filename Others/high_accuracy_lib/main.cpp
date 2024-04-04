@@ -22,6 +22,8 @@ int main() {
     cout << "a%b:" << a % b << endl;
     c = a + 2 * b + d;
     cout << c << endl;
+    c *= 20;
+    cout << c << endl;
     cout << (a > b) << (a < b) << (a >= b) << (a <= b) << (a == b) << endl;
     a = 0;
     a = -a;

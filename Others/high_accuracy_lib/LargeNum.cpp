@@ -14,7 +14,7 @@ LargeNum::LargeNum() {
     _data = new char[MAX_N]{};
 }
 
-LargeNum LargeNum::fromString(std::string s){
+LargeNum LargeNum::fromString(std::string s) {
     LargeNum a;
     if (s[0] == '-') {
         a.sign = true;
@@ -536,31 +536,31 @@ int operator%(const LargeNum &a, int b) {
     return remain;
 }
 
-LargeNum LargeNum::operator+=(const LargeNum &a) {
+LargeNum &LargeNum::operator+=(const LargeNum &a) {
     return *this = *this + a;
 }
 
-LargeNum LargeNum::operator-=(const LargeNum &a) {
+LargeNum &LargeNum::operator-=(const LargeNum &a) {
     return *this = *this - a;
 }
 
-LargeNum LargeNum::operator*=(const LargeNum &a) {
+LargeNum &LargeNum::operator*=(const LargeNum &a) {
     return *this = *this * a;
 }
 
-LargeNum LargeNum::operator/=(int a) {
+LargeNum &LargeNum::operator/=(int a) {
     return *this = *this / a;
 }
 
-LargeNum LargeNum::operator%=(int a) {
+LargeNum &LargeNum::operator%=(int a) {
     return *this = LargeNum(*this % a);
 }
 
-LargeNum LargeNum::operator/=(const LargeNum &a) {
+LargeNum &LargeNum::operator/=(const LargeNum &a) {
     return *this = *this / a;
 }
 
-LargeNum LargeNum::operator%=(const LargeNum &a) {
+LargeNum &LargeNum::operator%=(const LargeNum &a) {
     return *this = *this % a;
 }
 
