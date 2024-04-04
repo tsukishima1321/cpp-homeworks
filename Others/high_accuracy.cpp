@@ -2,8 +2,6 @@
 // 计算正整数加、乘、除的结果，其中除数为int范围，其余数据范围为0<=a<1e1000
 // 知识点：数组、字符串
 
-// 使用VScode编译多文件项目时，将task.json中的${file}替换为${fileDirname}\\*.cpp
-
 #include <iostream>
 #include <string>
 

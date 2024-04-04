@@ -1,4 +1,4 @@
-//
+// 使用VScode编译多文件项目时，将task.json中的${file}替换为${fileDirname}\\*.cpp
 //
 #include "LargeNum.h"
 #include <iostream>
