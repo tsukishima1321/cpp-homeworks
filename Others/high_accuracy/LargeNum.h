@@ -7,7 +7,8 @@ class LargeNum {
 public:
     enum Error {
         NO_ERR,
-        OVERFLOW
+        OVERFLOW,
+        UNKNOWN,
     };
 
     LargeNum();

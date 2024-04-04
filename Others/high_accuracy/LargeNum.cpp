@@ -235,16 +235,16 @@ LargeNum operator+(const LargeNum &a, const LargeNum &b) {
         return -LargeNum::unsignPlus(a, b);
     }
     if (a.sign && is_aBigger) { // a负b正，a绝对值大
-        return -(-a - b);
+        return -LargeNum::unsignMinus(a, b);
     }
     if (a.sign && !is_aBigger) { // a负b正，a绝对值小
-        return b - a;
+        return LargeNum::unsignMinus(b, a);
     }
     if (b.sign && is_aBigger) { // a正b负，a绝对值大
-        return a - (-b);
+        return LargeNum::unsignMinus(a, b);
     }
     if (b.sign && !is_aBigger) { // a正b负，a绝对值小
-        return -(-b - a);
+        return -LargeNum::unsignMinus(b, a);
     }
     // 都为正数
     return LargeNum::unsignPlus(a, b);
@@ -258,6 +258,8 @@ LargeNum LargeNum::unsignMinus(const LargeNum &a, const LargeNum &b) {
             if (i < MAX_N - 1) {
                 result[i] = result[i] + 10;
                 result[i + 1] -= 1;
+            }else{
+                return LargeNum(LargeNum::OVERFLOW);
             }
         }
     }
@@ -265,27 +267,28 @@ LargeNum LargeNum::unsignMinus(const LargeNum &a, const LargeNum &b) {
 }
 
 LargeNum operator-(const LargeNum &a, const LargeNum &b) {
-    if(!a.sign&&b.sign){
-        return LargeNum::unsignPlus(a,b);
+    if (!a.sign && b.sign) {
+        return LargeNum::unsignPlus(a, b);
     }
-    if(a.sign&&!b.sign){
-        return -LargeNum::unsignPlus(a,b);
+    if (a.sign && !b.sign) {
+        return -LargeNum::unsignPlus(a, b);
     }
-    bool is_aBigger=LargeNum::unsignCmp(a,b);
-    if(!a.sign&&!b.sign){
-        if(is_aBigger){
-            return LargeNum::unsignMinus(a,b);
-        }else{
-            return -LargeNum::unsignMinus(b,a);
+    bool is_aBigger = LargeNum::unsignCmp(a, b);
+    if (!a.sign && !b.sign) {
+        if (is_aBigger) {
+            return LargeNum::unsignMinus(a, b);
+        } else {
+            return -LargeNum::unsignMinus(b, a);
         }
     }
-    if(a.sign&&b.sign){
-        if(is_aBigger){
-            return -LargeNum::unsignMinus(a,b);
-        }else{
-            return LargeNum::unsignMinus(b,a);
+    if (a.sign && b.sign) {
+        if (is_aBigger) {
+            return -LargeNum::unsignMinus(a, b);
+        } else {
+            return LargeNum::unsignMinus(b, a);
         }
     }
+    return LargeNum(LargeNum::UNKNOWN);
 }
 
 LargeNum operator*(const LargeNum &a, const LargeNum &b) {
