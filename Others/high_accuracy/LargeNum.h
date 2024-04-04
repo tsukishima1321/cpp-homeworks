@@ -55,4 +55,7 @@ public:
 private:
     int *_data;
     bool sign;
+    static LargeNum unsignPlus(const LargeNum &a,const LargeNum &b);
+    static LargeNum unsignMinus(const LargeNum &a,const LargeNum &b);
+    static bool unsignCmp(const LargeNum &a,const LargeNum &b);
 };

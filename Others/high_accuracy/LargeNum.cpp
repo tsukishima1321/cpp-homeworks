@@ -158,6 +158,7 @@ LargeNum LargeNum::operator-() const {
     return res;
 }
 
+/* 有bug 有解决bug的思路，但是可能性能糟糕
 LargeNum operator+(const LargeNum &a, const LargeNum &b) {
     int result[MAX_N] = {};
     bool sg = false;
@@ -194,6 +195,97 @@ LargeNum operator+(const LargeNum &a, const LargeNum &b) {
 
 LargeNum operator-(const LargeNum &a, const LargeNum &b) {
     return a + -b;
+}
+*/
+LargeNum LargeNum::unsignPlus(const LargeNum &a, const LargeNum &b) {
+    int result[MAX_N] = {};
+    for (int i = 0; i < MAX_N; i++) {
+        result[i] += a._data[i] + b._data[i];
+        if (result[i] >= 10) {
+            if (i < MAX_N - 1) {
+                result[i] %= 10;
+                result[i + 1] += 1;
+            } else {
+                return LargeNum(LargeNum::OVERFLOW);
+            }
+        }
+    }
+    return LargeNum(result);
+}
+
+bool LargeNum::unsignCmp(const LargeNum &a, const LargeNum &b) {
+    for (int i = 0; i < MAX_N; i++) {
+        if (a._data[i] != b._data[i]) {
+            if (a.sign) {
+                return a._data[i] < b._data[i];
+            } else {
+                return a._data[i] > b._data[i];
+            }
+        }
+    }
+    return false;
+}
+
+LargeNum operator+(const LargeNum &a, const LargeNum &b) {
+    bool is_aBigger;
+    if (a.sign || b.sign) {
+        is_aBigger = LargeNum::unsignCmp(a, b);
+    }
+    if (a.sign && b.sign) { // 都为负数
+        return -LargeNum::unsignPlus(a, b);
+    }
+    if (a.sign && is_aBigger) { // a负b正，a绝对值大
+        return -(-a - b);
+    }
+    if (a.sign && !is_aBigger) { // a负b正，a绝对值小
+        return b - a;
+    }
+    if (b.sign && is_aBigger) { // a正b负，a绝对值大
+        return a - (-b);
+    }
+    if (b.sign && !is_aBigger) { // a正b负，a绝对值小
+        return -(-b - a);
+    }
+    // 都为正数
+    return LargeNum::unsignPlus(a, b);
+}
+
+LargeNum LargeNum::unsignMinus(const LargeNum &a, const LargeNum &b) {
+    int result[MAX_N] = {};
+    for (int i = 0; i < MAX_N; i++) {
+        result[i] += a._data[i] - b._data[i];
+        if (result[i] < 0) {
+            if (i < MAX_N - 1) {
+                result[i] = result[i] + 10;
+                result[i + 1] -= 1;
+            }
+        }
+    }
+    return LargeNum(result);
+}
+
+LargeNum operator-(const LargeNum &a, const LargeNum &b) {
+    if(!a.sign&&b.sign){
+        return LargeNum::unsignPlus(a,b);
+    }
+    if(a.sign&&!b.sign){
+        return -LargeNum::unsignPlus(a,b);
+    }
+    bool is_aBigger=LargeNum::unsignCmp(a,b);
+    if(!a.sign&&!b.sign){
+        if(is_aBigger){
+            return LargeNum::unsignMinus(a,b);
+        }else{
+            return -LargeNum::unsignMinus(b,a);
+        }
+    }
+    if(a.sign&&b.sign){
+        if(is_aBigger){
+            return -LargeNum::unsignMinus(a,b);
+        }else{
+            return LargeNum::unsignMinus(b,a);
+        }
+    }
 }
 
 LargeNum operator*(const LargeNum &a, const LargeNum &b) {
@@ -377,10 +469,10 @@ bool operator>=(const LargeNum &a, const LargeNum &b) {
     return true;
 }
 
-bool operator<=(const LargeNum &a,const LargeNum &b){
-    return !(a>b);
+bool operator<=(const LargeNum &a, const LargeNum &b) {
+    return !(a > b);
 }
 
-bool operator<(const LargeNum &a,const LargeNum &b){
-    return !(a>=b);
+bool operator<(const LargeNum &a, const LargeNum &b) {
+    return !(a >= b);
 }
