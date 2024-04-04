@@ -142,6 +142,10 @@ int main() {
     cout << "a/b:" << a / b << endl;
     cout << "a%b:" << a % b << endl;
     cout << (a > b) << (a < b) << (a >= b) << (a <= b) << (a == b);
+    a = 0;
+    a = -a;
+    b = 0;
+    cout << (a > b) << (a < b) << (a >= b) << (a <= b) << (a == b);
     system("pause");
     return 0;
 }

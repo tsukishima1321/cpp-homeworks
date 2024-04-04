@@ -13,8 +13,8 @@ public:
 
     LargeNum();
     LargeNum(long long a);
-    LargeNum(const int a[MAX_N]);
-    LargeNum(const int a[MAX_N], bool sg);
+    explicit LargeNum(const int a[MAX_N]);
+    explicit LargeNum(const int a[MAX_N], bool sg);
     LargeNum(const LargeNum &from);
     LargeNum(LargeNum &&from);
     explicit LargeNum(Error e);
@@ -43,6 +43,8 @@ public:
     LargeNum operator*=(const LargeNum &a);
     LargeNum operator/=(int a);
     LargeNum operator%=(int a);
+    LargeNum operator/=(const LargeNum &a);
+    LargeNum operator%=(const LargeNum &a);
 
     friend bool operator==(const LargeNum &a, const LargeNum &b);
     friend bool operator!=(const LargeNum &a, const LargeNum &b);
@@ -51,14 +53,13 @@ public:
     friend bool operator>=(const LargeNum &a, const LargeNum &b);
     friend bool operator<=(const LargeNum &a, const LargeNum &b);
 
-    static long long pow10(int a);
-
     Error error;
 
 private:
-    int *_data;
+    char *_data;
     bool sign;
-    static LargeNum unsignPlus(const LargeNum &a,const LargeNum &b);
-    static LargeNum unsignMinus(const LargeNum &a,const LargeNum &b);
-    static bool unsignCmp(const LargeNum &a,const LargeNum &b);
+    static long long pow10(int a);
+    static LargeNum unsignPlus(const LargeNum &a, const LargeNum &b);
+    static LargeNum unsignMinus(const LargeNum &a, const LargeNum &b);
+    static bool unsignCmp(const LargeNum &a, const LargeNum &b);
 };

@@ -11,7 +11,7 @@ long long LargeNum::pow10(int a) {
 LargeNum::LargeNum() {
     error = NO_ERR;
     sign = false;
-    _data = new int[MAX_N]{};
+    _data = new char[MAX_N]{};
 }
 
 LargeNum::LargeNum(long long a) : LargeNum::LargeNum() {
@@ -155,6 +155,16 @@ std::istream &operator>>(std::istream &in, LargeNum &a) {
 LargeNum LargeNum::operator-() const {
     LargeNum res(*this);
     res.sign ^= true;
+    bool zero = true;
+    for (int i = 0; i < MAX_N; i++) { // 需要避免-0产生
+        if (_data[i] != 0) {
+            zero = true;
+            break;
+        }
+    }
+    if (zero) {
+        res.sign = false;
+    }
     return res;
 }
 
@@ -405,8 +415,8 @@ LargeNum operator/(const LargeNum &a, const LargeNum &b) {
     return LargeNum(result, sg);
 }
 
-LargeNum operator%(const LargeNum &a, const LargeNum &b){
-        int result[MAX_N] = {};
+LargeNum operator%(const LargeNum &a, const LargeNum &b) {
+    int result[MAX_N] = {};
     int l; // b的位数
     bool sg;
     sg = a.sign ^ b.sign;
@@ -532,14 +542,22 @@ LargeNum LargeNum::operator%=(int a) {
     return *this = LargeNum(*this % a);
 }
 
+LargeNum LargeNum::operator/=(const LargeNum &a) {
+    return *this = *this / a;
+}
+
+LargeNum LargeNum::operator%=(const LargeNum &a) {
+    return *this = *this % a;
+}
+
 bool operator==(const LargeNum &a, const LargeNum &b) {
-    if (a.sign != b.sign) {
-        return false;
-    }
     for (int i = 0; i < MAX_N; i++) {
         if (a._data[i] != b._data[i]) {
             return false;
         }
+    }
+    if (a.sign != b.sign) {
+        return false;
     }
     return true;
 }
