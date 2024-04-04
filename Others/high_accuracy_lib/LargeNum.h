@@ -24,6 +24,7 @@ public:
     LargeNum &operator=(LargeNum &&from);
 
     void FromStream(std::istream &in);
+    static LargeNum fromString(std::string str);
     friend std::istream &operator>>(std::istream &in, LargeNum &a);
 
     std::string toString() const;

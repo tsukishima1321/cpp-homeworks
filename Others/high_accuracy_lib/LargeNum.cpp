@@ -14,6 +14,20 @@ LargeNum::LargeNum() {
     _data = new char[MAX_N]{};
 }
 
+LargeNum LargeNum::fromString(std::string s){
+    LargeNum a;
+    if (s[0] == '-') {
+        a.sign = true;
+        s.erase(0, 1);
+    } else {
+        a.sign = false;
+    }
+    for (int i = 0; i < s.length(); i++) {
+        a._data[i] = s[s.length() - i - 1] - '0';
+    }
+    return std::move(a);
+}
+
 LargeNum::LargeNum(long long a) : LargeNum::LargeNum() {
     int i = 0;
     if (a < 0) {

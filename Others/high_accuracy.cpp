@@ -115,14 +115,11 @@ int devide(const int a[N], int b, int target[N], int *remain) {
     return 0;
 }
 
-// 面向对象的写法：
-#include "LargeNum.h"
-
 int main() {
 #ifdef _WIN32
     system("chcp 65001");
 #endif
-    /*int a[N] = {};
+    int a[N] = {};
     //int b[N] = {};
     init(a);
     //init(b);
@@ -131,21 +128,8 @@ int main() {
     int c[N] = {};
     int r;
     devide(a, d, c, &r);
-    cout << "商：" << render(c) << "  余数:" << r << endl;*/
-    LargeNum a;
-    LargeNum b;
-    int c;
-    cin >> a >> b;
-    cout << "a+b:" << a + b << endl;
-    cout << "a-b:" << a - b << endl;
-    cout << "a*b:" << a * b << endl;
-    cout << "a/b:" << a / b << endl;
-    cout << "a%b:" << a % b << endl;
-    cout << (a > b) << (a < b) << (a >= b) << (a <= b) << (a == b);
-    a = 0;
-    a = -a;
-    b = 0;
-    cout << (a > b) << (a < b) << (a >= b) << (a <= b) << (a == b);
+    cout << "商：" << render(c) << "  余数:" << r << endl;
+
     system("pause");
     return 0;
 }
