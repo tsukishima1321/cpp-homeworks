@@ -13,7 +13,7 @@ public:
 
     LargeNum();
     LargeNum(long long a);
-    explicit LargeNum(const char a[MAX_N]);
+    explicit LargeNum(char* a);
     explicit LargeNum(const char a[MAX_N], bool sg);
     LargeNum(const LargeNum &from);
     LargeNum(LargeNum &&from);

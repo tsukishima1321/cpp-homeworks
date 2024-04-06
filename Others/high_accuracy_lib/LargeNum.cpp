@@ -56,10 +56,8 @@ LargeNum::LargeNum(LargeNum &&from) {
     from._data = nullptr;
 }
 
-LargeNum::LargeNum(const char a[MAX_N]) : LargeNum::LargeNum() {
-    for (int i = 0; i < MAX_N; i++) {
-        _data[i] = a[i];
-    }
+LargeNum::LargeNum(char *a) : LargeNum::LargeNum() {
+    _data = a;
 }
 
 LargeNum::LargeNum(const char a[MAX_N], bool sg) : LargeNum::LargeNum() {
@@ -172,7 +170,7 @@ LargeNum LargeNum::operator-() const {
     bool zero = true;
     for (int i = 0; i < MAX_N; i++) { // 需要避免-0产生
         if (_data[i] != 0) {
-            zero = true;
+            zero = false;
             break;
         }
     }
@@ -222,7 +220,7 @@ LargeNum operator-(const LargeNum &a, const LargeNum &b) {
 }
 */
 LargeNum LargeNum::unsignPlus(const LargeNum &a, const LargeNum &b) {
-    char result[MAX_N] = {};
+    char *result = new char[MAX_N]{};
     for (int i = 0; i < MAX_N; i++) {
         result[i] += a._data[i] + b._data[i];
         if (result[i] >= 10) {
@@ -271,7 +269,7 @@ LargeNum operator+(const LargeNum &a, const LargeNum &b) {
 }
 
 LargeNum LargeNum::unsignMinus(const LargeNum &a, const LargeNum &b) {
-    char result[MAX_N] = {};
+    char *result = new char[MAX_N]{};
     for (int i = 0; i < MAX_N; i++) {
         result[i] += a._data[i] - b._data[i];
         if (result[i] < 0) {
@@ -279,7 +277,7 @@ LargeNum LargeNum::unsignMinus(const LargeNum &a, const LargeNum &b) {
                 result[i] = result[i] + 10;
                 result[i + 1] -= 1;
             } else {
-                return LargeNum(LargeNum::OVERFLOW);
+                return LargeNum(LargeNum::WAIT_WHAT);
             }
         }
     }
@@ -312,7 +310,7 @@ LargeNum operator-(const LargeNum &a, const LargeNum &b) {
 }
 
 LargeNum operator*(const LargeNum &a, const LargeNum &b) {
-    char result[MAX_N] = {};
+    char *result = new char[MAX_N]{};
     bool sg = a.sign ^ b.sign;
     for (int i = 0; i < MAX_N; i++) {
         int n = 0;
@@ -333,7 +331,7 @@ LargeNum operator*(const LargeNum &a, const LargeNum &b) {
 }
 
 LargeNum operator/(const LargeNum &a, int b) {
-    char result[MAX_N] = {};
+    char *result = new char[MAX_N]{};
     int l = 0;
     bool sg;
     bool sign_b = b < 0;
@@ -371,7 +369,7 @@ LargeNum operator/(const LargeNum &a, int b) {
 }
 
 LargeNum operator/(const LargeNum &a, const LargeNum &b) {
-    char result[MAX_N] = {};
+    char *result = new char[MAX_N]{};
     int l; // b的位数
     bool sg;
     sg = a.sign ^ b.sign;
@@ -430,7 +428,7 @@ LargeNum operator/(const LargeNum &a, const LargeNum &b) {
 }
 
 LargeNum operator%(const LargeNum &a, const LargeNum &b) {
-    int result[MAX_N] = {};
+    char *result = new char[MAX_N]{};
     int l; // b的位数
     bool sg;
     sg = a.sign ^ b.sign;
@@ -489,7 +487,7 @@ LargeNum operator%(const LargeNum &a, const LargeNum &b) {
 }
 
 int operator%(const LargeNum &a, int b) {
-    int result[MAX_N] = {};
+    char *result = new char[MAX_N]{};
     int l = 0;
     bool sign_b = b < 0;
     if (sign_b) {
