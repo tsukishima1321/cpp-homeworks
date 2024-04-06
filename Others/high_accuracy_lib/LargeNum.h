@@ -13,11 +13,11 @@ public:
 
     LargeNum();
     LargeNum(long long a);
-    explicit LargeNum(char* a);
-    explicit LargeNum(const char a[MAX_N], bool sg);
     LargeNum(const LargeNum &from);
     LargeNum(LargeNum &&from);
     explicit LargeNum(Error e);
+    explicit LargeNum(const char a[MAX_N]);
+    explicit LargeNum(const char a[MAX_N], bool sg);
     ~LargeNum();
 
     LargeNum &operator=(const LargeNum &from);
@@ -58,7 +58,9 @@ public:
 
 private:
     char *_data;
-    bool sign;
+    bool _sign;
+    explicit LargeNum(char* a);
+    explicit LargeNum(char* a, bool sg);
     static long long pow10(int a);
     static LargeNum unsignPlus(const LargeNum &a, const LargeNum &b);
     static LargeNum unsignMinus(const LargeNum &a, const LargeNum &b);

@@ -10,17 +10,17 @@ long long LargeNum::pow10(int a) {
 
 LargeNum::LargeNum() {
     error = NO_ERR;
-    sign = false;
+    _sign = false;
     _data = new char[MAX_N]{};
 }
 
 LargeNum LargeNum::fromString(std::string s) {
     LargeNum a;
     if (s[0] == '-') {
-        a.sign = true;
+        a._sign = true;
         s.erase(0, 1);
     } else {
-        a.sign = false;
+        a._sign = false;
     }
     for (int i = 0; i < s.length(); i++) {
         a._data[i] = s[s.length() - i - 1] - '0';
@@ -32,7 +32,7 @@ LargeNum::LargeNum(long long a) : LargeNum::LargeNum() {
     int i = 0;
     if (a < 0) {
         a = -a;
-        sign = true;
+        _sign = true;
     }
     while (a > 0) {
         _data[i] = a % 10;
@@ -46,25 +46,39 @@ LargeNum::LargeNum(const LargeNum &from) : LargeNum::LargeNum() {
     for (int i = 0; i < MAX_N; i++) {
         _data[i] = from._data[i];
     }
-    sign = from.sign;
+    _sign = from._sign;
 }
 
 LargeNum::LargeNum(LargeNum &&from) {
     error = from.error;
     _data = from._data;
-    sign = from.sign;
+    _sign = from._sign;
     from._data = nullptr;
 }
 
-LargeNum::LargeNum(char *a) : LargeNum::LargeNum() {
+LargeNum::LargeNum(char *a) {
+    error = NO_ERR;
+    _sign = false;
     _data = a;
 }
 
-LargeNum::LargeNum(const char a[MAX_N], bool sg) : LargeNum::LargeNum() {
+LargeNum::LargeNum(char *a, bool sg) {
+    error = NO_ERR;
+    _data = a;
+    _sign = sg;
+}
+
+LargeNum::LargeNum(const char a[MAX_N]) : LargeNum() {
     for (int i = 0; i < MAX_N; i++) {
         _data[i] = a[i];
     }
-    sign = sg;
+}
+
+LargeNum::LargeNum(const char a[MAX_N], bool sg) : LargeNum() {
+    for (int i = 0; i < MAX_N; i++) {
+        _data[i] = a[i];
+    }
+    _sign = sg;
 }
 
 LargeNum::LargeNum(LargeNum::Error e) {
@@ -81,10 +95,10 @@ void LargeNum::FromStream(std::istream &in) {
     std::string s;
     in >> s;
     if (s[0] == '-') {
-        sign = true;
+        _sign = true;
         s.erase(0, 1);
     } else {
-        sign = false;
+        _sign = false;
     }
     for (int i = 0; i < s.length(); i++) {
         _data[i] = s[s.length() - i - 1] - '0';
@@ -99,14 +113,14 @@ LargeNum &LargeNum::operator=(const LargeNum &from) {
         _data[i] = from._data[i];
     }
     error = from.error;
-    sign = from.sign;
+    _sign = from._sign;
     return *this;
 }
 
 LargeNum &LargeNum::operator=(LargeNum &&from) {
     delete[] _data;
     _data = from._data;
-    sign = from.sign;
+    _sign = from._sign;
     error = from.error;
     from._data = nullptr;
     return *this;
@@ -125,7 +139,7 @@ std::string LargeNum::toString() const {
         }
         return res;
     }
-    if (sign) {
+    if (_sign) {
         res += "-";
     }
     bool f = false;
@@ -166,7 +180,7 @@ std::istream &operator>>(std::istream &in, LargeNum &a) {
 
 LargeNum LargeNum::operator-() const {
     LargeNum res(*this);
-    res.sign ^= true;
+    res._sign ^= true;
     bool zero = true;
     for (int i = 0; i < MAX_N; i++) { // 需要避免-0产生
         if (_data[i] != 0) {
@@ -175,7 +189,7 @@ LargeNum LargeNum::operator-() const {
         }
     }
     if (zero) {
-        res.sign = false;
+        res._sign = false;
     }
     return res;
 }
@@ -185,7 +199,7 @@ LargeNum operator+(const LargeNum &a, const LargeNum &b) {
     int result[MAX_N] = {};
     bool sg = false;
     for (int i = 0; i < MAX_N; i++) {
-        result[i] += (a.sign ? -1 : 1) * a._data[i] + (b.sign ? -1 : 1) * b._data[i];
+        result[i] += (a._sign ? -1 : 1) * a._data[i] + (b._sign ? -1 : 1) * b._data[i];
         if (result[i] >= 10) {
             if (i < MAX_N - 1) {
                 result[i] %= 10;
@@ -246,22 +260,22 @@ bool LargeNum::unsignCmp(const LargeNum &a, const LargeNum &b) {
 
 LargeNum operator+(const LargeNum &a, const LargeNum &b) {
     bool is_aBigger;
-    if (a.sign || b.sign) {
+    if (a._sign || b._sign) {
         is_aBigger = LargeNum::unsignCmp(a, b);
     }
-    if (a.sign && b.sign) { // 都为负数
+    if (a._sign && b._sign) { // 都为负数
         return -LargeNum::unsignPlus(a, b);
     }
-    if (a.sign && is_aBigger) { // a负b正，a绝对值大
+    if (a._sign && is_aBigger) { // a负b正，a绝对值大
         return -LargeNum::unsignMinus(a, b);
     }
-    if (a.sign && !is_aBigger) { // a负b正，a绝对值小
+    if (a._sign && !is_aBigger) { // a负b正，a绝对值小
         return LargeNum::unsignMinus(b, a);
     }
-    if (b.sign && is_aBigger) { // a正b负，a绝对值大
+    if (b._sign && is_aBigger) { // a正b负，a绝对值大
         return LargeNum::unsignMinus(a, b);
     }
-    if (b.sign && !is_aBigger) { // a正b负，a绝对值小
+    if (b._sign && !is_aBigger) { // a正b负，a绝对值小
         return -LargeNum::unsignMinus(b, a);
     }
     // 都为正数
@@ -285,21 +299,21 @@ LargeNum LargeNum::unsignMinus(const LargeNum &a, const LargeNum &b) {
 }
 
 LargeNum operator-(const LargeNum &a, const LargeNum &b) {
-    if (!a.sign && b.sign) {
+    if (!a._sign && b._sign) {
         return LargeNum::unsignPlus(a, b);
     }
-    if (a.sign && !b.sign) {
+    if (a._sign && !b._sign) {
         return -LargeNum::unsignPlus(a, b);
     }
     bool is_aBigger = LargeNum::unsignCmp(a, b);
-    if (!a.sign && !b.sign) {
+    if (!a._sign && !b._sign) {
         if (is_aBigger) {
             return LargeNum::unsignMinus(a, b);
         } else {
             return -LargeNum::unsignMinus(b, a);
         }
     }
-    if (a.sign && b.sign) {
+    if (a._sign && b._sign) {
         if (is_aBigger) {
             return -LargeNum::unsignMinus(a, b);
         } else {
@@ -311,7 +325,7 @@ LargeNum operator-(const LargeNum &a, const LargeNum &b) {
 
 LargeNum operator*(const LargeNum &a, const LargeNum &b) {
     char *result = new char[MAX_N]{};
-    bool sg = a.sign ^ b.sign;
+    bool sg = a._sign ^ b._sign;
     for (int i = 0; i < MAX_N; i++) {
         int n = 0;
         for (int j = 0; j < MAX_N; j++) {
@@ -334,11 +348,11 @@ LargeNum operator/(const LargeNum &a, int b) {
     char *result = new char[MAX_N]{};
     int l = 0;
     bool sg;
-    bool sign_b = b < 0;
-    if (sign_b) {
+    bool _sign_b = b < 0;
+    if (_sign_b) {
         b = -b;
     }
-    sg = a.sign ^ sign_b;
+    sg = a._sign ^ _sign_b;
     int b_ = b;
     while (b_ > 0) {
         b_ /= 10;
@@ -372,7 +386,7 @@ LargeNum operator/(const LargeNum &a, const LargeNum &b) {
     char *result = new char[MAX_N]{};
     int l; // b的位数
     bool sg;
-    sg = a.sign ^ b.sign;
+    sg = a._sign ^ b._sign;
     for (l = MAX_N - 1; l >= 0; l--) {
         if (b._data[l] != 0) {
             break;
@@ -431,7 +445,7 @@ LargeNum operator%(const LargeNum &a, const LargeNum &b) {
     char *result = new char[MAX_N]{};
     int l; // b的位数
     bool sg;
-    sg = a.sign ^ b.sign;
+    sg = a._sign ^ b._sign;
     for (l = MAX_N - 1; l >= 0; l--) {
         if (b._data[l] != 0) {
             break;
@@ -489,8 +503,8 @@ LargeNum operator%(const LargeNum &a, const LargeNum &b) {
 int operator%(const LargeNum &a, int b) {
     char *result = new char[MAX_N]{};
     int l = 0;
-    bool sign_b = b < 0;
-    if (sign_b) {
+    bool _sign_b = b < 0;
+    if (_sign_b) {
         b = -b;
     }
     int b_ = b;
@@ -524,10 +538,10 @@ int operator%(const LargeNum &a, int b) {
         result[j] = a_front / b;
     }
     remain = a_front % b;
-    if (a.sign) {
+    if (a._sign) {
         remain = b - remain;
     }
-    if (sign_b) {
+    if (_sign_b) {
         remain = b - remain;
         remain = -remain;
     }
@@ -568,7 +582,7 @@ bool operator==(const LargeNum &a, const LargeNum &b) {
             return false;
         }
     }
-    if (a.sign != b.sign) {
+    if (a._sign != b._sign) {
         return false;
     }
     return true;
@@ -579,15 +593,15 @@ bool operator!=(const LargeNum &a, const LargeNum &b) {
 }
 
 bool operator>(const LargeNum &a, const LargeNum &b) {
-    if (!a.sign && b.sign) {
+    if (!a._sign && b._sign) {
         return true;
     }
-    if (a.sign && !b.sign) {
+    if (a._sign && !b._sign) {
         return false;
     }
     for (int i = MAX_N - 1; i >= 0; i--) {
         if (a._data[i] != b._data[i]) {
-            if (a.sign) {
+            if (a._sign) {
                 return a._data[i] < b._data[i];
             } else {
                 return a._data[i] > b._data[i];
@@ -598,15 +612,15 @@ bool operator>(const LargeNum &a, const LargeNum &b) {
 }
 
 bool operator>=(const LargeNum &a, const LargeNum &b) {
-    if (!a.sign && b.sign) {
+    if (!a._sign && b._sign) {
         return true;
     }
-    if (a.sign && !b.sign) {
+    if (a._sign && !b._sign) {
         return false;
     }
     for (int i = MAX_N - 1; i >= 0; i--) {
         if (a._data[i] != b._data[i]) {
-            if (a.sign) {
+            if (a._sign) {
                 return a._data[i] < b._data[i];
             } else {
                 return a._data[i] > b._data[i];
