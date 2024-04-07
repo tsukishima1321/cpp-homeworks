@@ -4,6 +4,9 @@ long long LargeNum::pow10(int a) {
     long long p = 1;
     for (int i = 0; i < a; i++) {
         p *= 10;
+        if (p > LONG_LONG_MAX / 10) {
+            return -1;
+        }
     }
     return p;
 }
@@ -158,6 +161,51 @@ std::string LargeNum::toString() const {
     }
     if (!f) {
         res = "0";
+    }
+    return res;
+}
+
+long long LargeNum::toLongLong() const {
+    bool f = false;
+    long long res = 0;
+    for (int i = MAX_N - 1; i >= 0; i--) {
+        if (_data[i] != 0) {
+            f = true;
+        }
+        if (f) {
+            long long pow = pow10(i);
+            if (pow == -1) {
+                throw "overflow in conversion from \'LargeNum\' to \'long long\'";
+            }
+            res += pow * _data[i];
+        }
+    }
+    if (_sign) {
+        res = -res;
+    }
+    return res;
+}
+
+int LargeNum::toInt() const {
+    bool f = false;
+    long long res = 0;
+    for (int i = MAX_N - 1; i >= 0; i--) {
+        if (_data[i] != 0) {
+            f = true;
+        }
+        if (f) {
+            long long pow = pow10(i);
+            if (pow == -1) {
+                throw "overflow in conversion from \'LargeNum\' to \'int\'";
+            }
+            res += pow * _data[i];
+        }
+    }
+    if (res >= INT_MAX) {
+        throw "overflow in conversion from \'LargeNum\' to \'int\'";
+    }
+    if (_sign) {
+        res = -res;
     }
     return res;
 }
@@ -540,7 +588,7 @@ LargeNum operator%(const LargeNum &a, const LargeNum &b) {
 
 int operator%(const LargeNum &a, int b) {
     if (a.error != LargeNum::NO_ERR) {
-        return -1;
+        throw "Error:" + std::to_string(int(a.error));
     }
     char *result = new char[MAX_N]{};
     int l = 0;

@@ -15,11 +15,13 @@ int main() {
     LargeNum c;
     int d = 114514;
     cin >> c;
-    if(c){
-        cout<<"true"<<endl;
-    }else{
-        cout<<"false"<<endl;
+    if (c) {
+        cout << "true" << endl;
+    } else {
+        cout << "false" << endl;
     }
+    int l = c.toInt();
+    cout << l << endl;
     cout << c * 10 << endl;
     cout << "a+b:" << a + b << endl;
     cout << "a-b:" << a - b << endl;

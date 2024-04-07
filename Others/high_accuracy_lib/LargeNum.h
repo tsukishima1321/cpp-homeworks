@@ -29,6 +29,8 @@ public:
 
     std::string toString() const;
     friend std::ostream &operator<<(std::ostream &out, const LargeNum &a);
+    int toInt() const;
+    long long toLongLong() const;
 
     LargeNum operator-() const;
     friend LargeNum operator+(const LargeNum &a, const LargeNum &b);
