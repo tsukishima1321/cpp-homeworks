@@ -47,6 +47,7 @@ public:
     LargeNum &operator/=(const LargeNum &a);
     LargeNum &operator%=(const LargeNum &a);
 
+    explicit operator bool();
     friend bool operator==(const LargeNum &a, const LargeNum &b);
     friend bool operator!=(const LargeNum &a, const LargeNum &b);
     friend bool operator>(const LargeNum &a, const LargeNum &b);
@@ -59,9 +60,12 @@ public:
 private:
     char *_data;
     bool _sign;
-    explicit LargeNum(char* a);
-    explicit LargeNum(char* a, bool sg);
+
+    explicit LargeNum(char *a);
+    explicit LargeNum(char *a, bool sg);
+
     static long long pow10(int a);
+
     static LargeNum unsignPlus(const LargeNum &a, const LargeNum &b);
     static LargeNum unsignMinus(const LargeNum &a, const LargeNum &b);
     static bool unsignCmp(const LargeNum &a, const LargeNum &b);

@@ -118,7 +118,9 @@ LargeNum &LargeNum::operator=(const LargeNum &from) {
 }
 
 LargeNum &LargeNum::operator=(LargeNum &&from) {
-    delete[] _data;
+    if (_data != nullptr) {
+        delete[] _data;
+    }
     _data = from._data;
     _sign = from._sign;
     error = from.error;
@@ -574,6 +576,17 @@ LargeNum &LargeNum::operator/=(const LargeNum &a) {
 
 LargeNum &LargeNum::operator%=(const LargeNum &a) {
     return *this = *this % a;
+}
+
+LargeNum::operator bool() {
+    bool zero = true;
+    for (int i = 0; i < MAX_N; i++) {
+        if (_data[i] != 0) {
+            zero = false;
+            break;
+        }
+    }
+    return !zero;
 }
 
 bool operator==(const LargeNum &a, const LargeNum &b) {
