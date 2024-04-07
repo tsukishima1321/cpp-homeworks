@@ -135,6 +135,9 @@ std::string LargeNum::toString() const {
         case OVERFLOW:
             res += "OVERFLOW";
             break;
+        case WAIT_WHAT:
+            res += "WAIT_WHAT";
+            break;
         default:
             res += "UNKNOW_ERROR";
             break;
@@ -261,6 +264,12 @@ bool LargeNum::unsignCmp(const LargeNum &a, const LargeNum &b) {
 }
 
 LargeNum operator+(const LargeNum &a, const LargeNum &b) {
+    if (a.error != LargeNum::NO_ERR) {
+        return LargeNum(a.error);
+    }
+    if (b.error != LargeNum::NO_ERR) {
+        return LargeNum(b.error);
+    }
     bool is_aBigger;
     if (a._sign || b._sign) {
         is_aBigger = LargeNum::unsignCmp(a, b);
@@ -301,6 +310,12 @@ LargeNum LargeNum::unsignMinus(const LargeNum &a, const LargeNum &b) {
 }
 
 LargeNum operator-(const LargeNum &a, const LargeNum &b) {
+    if (a.error != LargeNum::NO_ERR) {
+        return LargeNum(a.error);
+    }
+    if (b.error != LargeNum::NO_ERR) {
+        return LargeNum(b.error);
+    }
     if (!a._sign && b._sign) {
         return LargeNum::unsignPlus(a, b);
     }
@@ -326,6 +341,12 @@ LargeNum operator-(const LargeNum &a, const LargeNum &b) {
 }
 
 LargeNum operator*(const LargeNum &a, const LargeNum &b) {
+    if (a.error != LargeNum::NO_ERR) {
+        return LargeNum(a.error);
+    }
+    if (b.error != LargeNum::NO_ERR) {
+        return LargeNum(b.error);
+    }
     char *result = new char[MAX_N]{};
     bool sg = a._sign ^ b._sign;
     for (int i = 0; i < MAX_N; i++) {
@@ -347,6 +368,9 @@ LargeNum operator*(const LargeNum &a, const LargeNum &b) {
 }
 
 LargeNum operator/(const LargeNum &a, int b) {
+    if (a.error != LargeNum::NO_ERR) {
+        return LargeNum(a.error);
+    }
     char *result = new char[MAX_N]{};
     int l = 0;
     bool sg;
@@ -385,6 +409,12 @@ LargeNum operator/(const LargeNum &a, int b) {
 }
 
 LargeNum operator/(const LargeNum &a, const LargeNum &b) {
+    if (a.error != LargeNum::NO_ERR) {
+        return LargeNum(a.error);
+    }
+    if (b.error != LargeNum::NO_ERR) {
+        return LargeNum(b.error);
+    }
     char *result = new char[MAX_N]{};
     int l; // b的位数
     bool sg;
@@ -444,6 +474,12 @@ LargeNum operator/(const LargeNum &a, const LargeNum &b) {
 }
 
 LargeNum operator%(const LargeNum &a, const LargeNum &b) {
+    if (a.error != LargeNum::NO_ERR) {
+        return LargeNum(a.error);
+    }
+    if (b.error != LargeNum::NO_ERR) {
+        return LargeNum(b.error);
+    }
     char *result = new char[MAX_N]{};
     int l; // b的位数
     bool sg;
@@ -503,6 +539,9 @@ LargeNum operator%(const LargeNum &a, const LargeNum &b) {
 }
 
 int operator%(const LargeNum &a, int b) {
+    if (a.error != LargeNum::NO_ERR) {
+        return -1;
+    }
     char *result = new char[MAX_N]{};
     int l = 0;
     bool _sign_b = b < 0;
@@ -579,6 +618,9 @@ LargeNum &LargeNum::operator%=(const LargeNum &a) {
 }
 
 LargeNum::operator bool() {
+    if (error != NO_ERR) {
+        return false;
+    }
     bool zero = true;
     for (int i = 0; i < MAX_N; i++) {
         if (_data[i] != 0) {
