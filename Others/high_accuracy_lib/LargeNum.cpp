@@ -311,6 +311,22 @@ bool LargeNum::unsignCmp(const LargeNum &a, const LargeNum &b) {
     return false;
 }
 
+LargeNum LargeNum::unsignMinus(const LargeNum &a, const LargeNum &b) {
+    char *result = new char[MAX_N]{};
+    for (int i = 0; i < MAX_N; i++) {
+        result[i] += a._data[i] - b._data[i];
+        if (result[i] < 0) {
+            if (i < MAX_N - 1) {
+                result[i] = result[i] + 10;
+                result[i + 1] -= 1;
+            } else {
+                return LargeNum(LargeNum::WAIT_WHAT);
+            }
+        }
+    }
+    return LargeNum(result);
+}
+
 LargeNum operator+(const LargeNum &a, const LargeNum &b) {
     if (a.error != LargeNum::NO_ERR) {
         return LargeNum(a.error);
@@ -339,22 +355,6 @@ LargeNum operator+(const LargeNum &a, const LargeNum &b) {
     }
     // 都为正数
     return LargeNum::unsignPlus(a, b);
-}
-
-LargeNum LargeNum::unsignMinus(const LargeNum &a, const LargeNum &b) {
-    char *result = new char[MAX_N]{};
-    for (int i = 0; i < MAX_N; i++) {
-        result[i] += a._data[i] - b._data[i];
-        if (result[i] < 0) {
-            if (i < MAX_N - 1) {
-                result[i] = result[i] + 10;
-                result[i + 1] -= 1;
-            } else {
-                return LargeNum(LargeNum::WAIT_WHAT);
-            }
-        }
-    }
-    return LargeNum(result);
 }
 
 LargeNum operator-(const LargeNum &a, const LargeNum &b) {
