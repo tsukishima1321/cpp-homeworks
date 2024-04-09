@@ -143,13 +143,13 @@ int main_5() {
 #include <concepts>
 #include <string>
 
-template <std::equality_comparable T>
+template <std::regular T>
 class equal_to_ {
 public:
-    equal_to_(T c) {
+    equal_to_(const T &c) {
         this->c = c;
     }
-    bool operator()(T t) {
+    bool operator()(const T &t) {
         return t == c;
     }
 
