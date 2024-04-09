@@ -2,7 +2,7 @@
 // 编写程序，将某一指定字符从一个已知的字符串中删除。假设已知字符串为“aaaasdfga”，将其中出现的'a'字母删除，删除后的字符串为“sdfg”。
 #include <iostream>
 
-using std::cin,std::cout,std::endl,std::string;
+using std::cin, std::cout, std::endl, std::string;
 
 int main_() {
 #ifdef _WIN32
@@ -119,7 +119,7 @@ private:
     char c;
 };
 
-int main() {
+int main_5() {
 #ifdef _WIN32
     system("chcp 65001");
 #endif
@@ -138,14 +138,15 @@ int main() {
 }
 
 // ????:
+// c++20
 #include <algorithm>
+#include <concepts>
 #include <string>
-#include <concept>
 
 template <std::equality_comparable T>
-class equal_to {
+class equal_to_ {
 public:
-    equal_to(T c) {
+    equal_to_(T c) {
         this->c = c;
     }
     bool operator()(T t) {
@@ -167,7 +168,7 @@ int main() {
     cout << "要删除的字符：" << endl;
     char c;
     cin >> c;
-    string::iterator new_end = remove_if(s.begin(), s.end(), equal_to<char>(c));
+    string::iterator new_end = remove_if(s.begin(), s.end(), equal_to_<char>(c));
     s.erase(new_end, s.end());
     cout << s;
     system("pause");
