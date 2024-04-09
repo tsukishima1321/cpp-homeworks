@@ -157,7 +157,7 @@ private:
     T c;
 };
 
-int main() {
+int main_6() {
 #ifdef _WIN32
     system("chcp 65001");
 #endif
@@ -169,6 +169,25 @@ int main() {
     char c;
     cin >> c;
     string::iterator new_end = remove_if(s.begin(), s.end(), equal_to(c));
+    s.erase(new_end, s.end());
+    cout << s;
+    system("pause");
+    return 0;
+}
+
+//...
+int main_7() {
+#ifdef _WIN32
+    system("chcp 65001");
+#endif
+
+    string s;
+    cout << "要处理的字符串：" << endl;
+    cin >> s;
+    cout << "要删除的字符：" << endl;
+    char c;
+    cin >> c;
+    string::iterator new_end = remove_if(s.begin(), s.end(), [=](char a){return [=](char t){return t==a;};}(c));
     s.erase(new_end, s.end());
     cout << s;
     system("pause");
