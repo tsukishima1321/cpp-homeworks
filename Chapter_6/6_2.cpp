@@ -102,7 +102,7 @@ int main_4() {
     return 0;
 }
 
-// ???:
+// algorithm 仿函数:
 #include <algorithm>
 #include <string>
 
@@ -137,7 +137,7 @@ int main_5() {
     return 0;
 }
 
-// ????:
+// algorithm 泛型仿函数 模板类型约束 :
 // c++20
 #include <algorithm>
 #include <concepts>
