@@ -4,7 +4,7 @@
 
 using std::cin, std::cout, std::endl;
 
-int main() {
+int main_() {
 #ifdef _WIN32
     system("chcp 65001");
 #endif
@@ -18,6 +18,51 @@ int main() {
             s[i] += 'a' - 'A';
         }
     }
+    cout << s << endl;
+
+    system("pause");
+    return 0;
+}
+
+// string
+#include <string>
+
+int main() {
+#ifdef _WIN32
+    system("chcp 65001");
+#endif
+
+    std::string s;
+    getline(cin, s);
+    for (char &c : s) {
+        if (c >= 'a' && c <= 'z') {
+            c += 'A' - 'a';
+        } else if (c >= 'A' && c <= 'Z') {
+            c += 'a' - 'A';
+        }
+    }
+    cout << s << endl;
+
+    system("pause");
+    return 0;
+}
+
+// string algorithm lambda
+#include <algorithm>
+#include <string>
+
+int main_3() {
+#ifdef _WIN32
+    system("chcp 65001");
+#endif
+
+    std::string s;
+    getline(cin, s);
+    std::for_each(s.begin(), s.end(), [](char &c) {if (c >= 'a' && c <= 'z') {
+            c += 'A' - 'a';
+        } else if (c >= 'A' && c <= 'Z') {
+            c += 'a' - 'A';
+        } });
     cout << s << endl;
 
     system("pause");

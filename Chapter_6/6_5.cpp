@@ -4,14 +4,13 @@
 
 using std::cin, std::cout, std::endl;
 
-int main() {
+int main_() {
 #ifdef _WIN32
     system("chcp 65001");
 #endif
 
     char a[100];
     char b[100];
-
     cin >> a;
     cin >> b;
     int i;
@@ -21,6 +20,44 @@ int main() {
         a[i + j] = b[j];
     }
     a[i + j] = '\0';
+    cout << a << endl;
+    system("pause");
+    return 0;
+}
+
+// cstring
+#include <cstring>
+
+int main_2() {
+#ifdef _WIN32
+    system("chcp 65001");
+#endif
+
+    char a[100];
+    char b[100];
+    cin >> a;
+    cin >> b;
+    int i;
+    for (i = 0; a[i] != '\0'; i++);
+    int j;
+    std::strcpy(&a[i], b);
+    cout << a << endl;
+    system("pause");
+    return 0;
+}
+
+// string
+#include <string>
+
+int main_3() {
+#ifdef _WIN32
+    system("chcp 65001");
+#endif
+
+    std::string a, b;
+    cin >> a;
+    cin >> b;
+    a = a + b;
     cout << a << endl;
     system("pause");
     return 0;
