@@ -106,9 +106,9 @@ int main_4() {
 #include <algorithm>
 #include <string>
 
-class equal_to {
+class equal_to_ {
 public:
-    equal_to(char c) {
+    equal_to_(char c) {
         this->c = c;
     }
     bool operator()(char t) {
@@ -130,7 +130,7 @@ int main_5() {
     cout << "要删除的字符：" << endl;
     char c;
     cin >> c;
-    string::iterator new_end = remove_if(s.begin(), s.end(), equal_to(c));
+    string::iterator new_end = remove_if(s.begin(), s.end(), equal_to_(c));
     s.erase(new_end, s.end());
     cout << s;
     system("pause");
@@ -144,9 +144,9 @@ int main_5() {
 #include <string>
 
 template <std::regular T>
-class equal_to_ {
+class equal_to {
 public:
-    equal_to_(const T &c) {
+    equal_to(const T &c) {
         this->c = c;
     }
     bool operator()(const T &t) {
@@ -168,7 +168,7 @@ int main() {
     cout << "要删除的字符：" << endl;
     char c;
     cin >> c;
-    string::iterator new_end = remove_if(s.begin(), s.end(), equal_to_<char>(c));
+    string::iterator new_end = remove_if(s.begin(), s.end(), equal_to(c));
     s.erase(new_end, s.end());
     cout << s;
     system("pause");
