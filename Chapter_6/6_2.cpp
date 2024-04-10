@@ -103,11 +103,11 @@ int main_4() {
 }
 
 // algorithm std::remove_if
-//几种构造callable对象的方法：（泛型）仿函数，（泛型）lambda表达式
+// 几种构造callable对象的方法：（泛型）仿函数，（泛型）lambda表达式
 #include <algorithm>
 #include <string>
 
-//c++20
+// c++20
 #include <concepts>
 
 class equal_to_char {
@@ -142,6 +142,34 @@ private:
     T c;
 };
 
+int main_5() {
+#ifdef _WIN32
+    system("chcp 65001");
+#endif
+
+    string s;
+    cout << "要处理的字符串：" << endl;
+    cin >> s;
+    cout << "要删除的字符：" << endl;
+    char c;
+    cin >> c;
+    // 等价的写法：
+    string::iterator new_end = remove_if(s.begin(), s.end(), [c](char t) { return t == c; });
+    // string::iterator new_end = remove_if(s.begin(), s.end(), equal_to_char(c));
+    // string::iterator new_end = remove_if(s.begin(), s.end(), equal_to(c));
+    // string::iterator new_end = remove_if(s.begin(), s.end(), [c]<std::regular T>(T t) { return t == c; });
+    // string::iterator new_end = remove_if(s.begin(), s.end(), [c](std::regular auto t) { return t == c; });
+    s.erase(new_end, s.end());
+    cout << s;
+    system("pause");
+    return 0;
+}
+
+// c++20
+// 使用std::range std::view:
+#include <ranges>
+#include <string>
+
 int main() {
 #ifdef _WIN32
     system("chcp 65001");
@@ -153,14 +181,10 @@ int main() {
     cout << "要删除的字符：" << endl;
     char c;
     cin >> c;
-    //等价的写法：
-    string::iterator new_end = remove_if(s.begin(), s.end(), [c](char t) { return t == c; });
-    //string::iterator new_end = remove_if(s.begin(), s.end(), equal_to_char(c));
-    //string::iterator new_end = remove_if(s.begin(), s.end(), equal_to(c));
-    //string::iterator new_end = remove_if(s.begin(), s.end(), [c]<std::regular T>(T t) { return t == c; });
-    //string::iterator new_end = remove_if(s.begin(), s.end(), [c](std::regular auto t) { return t == c; });
-    s.erase(new_end, s.end());
-    cout << s;
+    auto filtered_s = s | std::views::filter([c](char t) { return t != c; });
+    for (char ch : filtered_s) {
+        cout << ch;
+    }
     system("pause");
     return 0;
 }
