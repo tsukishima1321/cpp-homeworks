@@ -68,3 +68,26 @@ int main_3() {
     system("pause");
     return 0;
 }
+
+// range view
+#include <ranges>
+#include <string>
+
+int main_3() {
+#ifdef _WIN32
+    system("chcp 65001");
+#endif
+
+    std::string s;
+    getline(cin, s);
+    auto operate = [](const char &c) {if (c >= 'a' && c <= 'z') {
+            return c + 'A' - 'a';
+        } else if (c >= 'A' && c <= 'Z') {
+            return c + 'a' - 'A';
+        }; };
+    auto operated_s = s | std::views::transform(operate);
+    cout << std::string(operated_s.begin(),operated_s.end()) << endl;
+
+    system("pause");
+    return 0;
+}
