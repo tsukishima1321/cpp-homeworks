@@ -182,9 +182,12 @@ int main() {
     char c;
     cin >> c;
     auto filtered_s = s | std::views::filter([c](char t) { return t != c; });
-    for (char ch : filtered_s) {
+    for (char ch : filtered_s) { //view算法是惰性的，直到遍历输出时才会求值
         cout << ch;
     }
+    //也可以将得到的range再转化为实际的string
+    //s = string(filtered_s.begin(), filtered_s.end());
+    //cout << s;
     system("pause");
     return 0;
 }
