@@ -80,7 +80,7 @@ int main_3() {
     return 0;
 }
 
-// 使用algorithm:
+// 使用algorithm std::remove:
 #include <algorithm>
 #include <string>
 
@@ -102,32 +102,17 @@ int main_4() {
     return 0;
 }
 
-// algorithm lambda
-int main_5() {
-#ifdef _WIN32
-    system("chcp 65001");
-#endif
-
-    string s;
-    cout << "要处理的字符串：" << endl;
-    cin >> s;
-    cout << "要删除的字符：" << endl;
-    char c;
-    cin >> c;
-    string::iterator new_end = remove_if(s.begin(), s.end(), [c](char t) { return t == c; });
-    s.erase(new_end, s.end());
-    cout << s;
-    system("pause");
-    return 0;
-}
-
-// algorithm 仿函数:
+// algorithm std::remove_if
+//几种构造callable对象的方法：（泛型）仿函数，（泛型）lambda表达式
 #include <algorithm>
 #include <string>
 
-class equal_to_ {
+//c++20
+#include <concepts>
+
+class equal_to_char {
 public:
-    equal_to_(char c) {
+    equal_to_char(char c) {
         this->c = c;
     }
     bool operator()(char t) {
@@ -138,31 +123,12 @@ private:
     char c;
 };
 
-int main_6() {
-#ifdef _WIN32
-    system("chcp 65001");
-#endif
-
-    string s;
-    cout << "要处理的字符串：" << endl;
-    cin >> s;
-    cout << "要删除的字符：" << endl;
-    char c;
-    cin >> c;
-    string::iterator new_end = remove_if(s.begin(), s.end(), equal_to_(c));
-    s.erase(new_end, s.end());
-    cout << s;
-    system("pause");
-    return 0;
-}
-
-// algorithm 泛型仿函数 模板类型约束 :
-// c++20
-#include <algorithm>
-#include <concepts>
-#include <string>
-
+/*
+c++20
+使用concept简化报错信息和内联提示
 template <std::regular T>
+*/
+template <typename T>
 class equal_to {
 public:
     equal_to(const T &c) {
@@ -176,7 +142,7 @@ private:
     T c;
 };
 
-int main_7() {
+int main() {
 #ifdef _WIN32
     system("chcp 65001");
 #endif
@@ -187,7 +153,12 @@ int main_7() {
     cout << "要删除的字符：" << endl;
     char c;
     cin >> c;
-    string::iterator new_end = remove_if(s.begin(), s.end(), equal_to(c));
+    //等价的写法：
+    string::iterator new_end = remove_if(s.begin(), s.end(), [c](char t) { return t == c; });
+    //string::iterator new_end = remove_if(s.begin(), s.end(), equal_to_char(c));
+    //string::iterator new_end = remove_if(s.begin(), s.end(), equal_to(c));
+    //string::iterator new_end = remove_if(s.begin(), s.end(), [c]<std::regular T>(T t) { return t == c; });
+    //string::iterator new_end = remove_if(s.begin(), s.end(), [c](std::regular auto t) { return t == c; });
     s.erase(new_end, s.end());
     cout << s;
     system("pause");
