@@ -494,7 +494,7 @@ LargeNum operator/(const LargeNum &a, const LargeNum &b) {
         } else {
             n++;
         }
-        c = LargeNum::unsignMinus(a_front, b);
+        c = LargeNum::unsignMinus(c, b);
     }
     result[i - l + 1] = n;
     for (int j = i - l; j >= 0; j--) {
@@ -559,7 +559,7 @@ LargeNum operator%(const LargeNum &a, const LargeNum &b) {
         } else {
             n++;
         }
-        c = LargeNum::unsignMinus(a_front, b);
+        c = LargeNum::unsignMinus(c, b);
     }
     result[i - l + 1] = n;
     for (int j = i - l; j >= 0; j--) {
@@ -583,7 +583,7 @@ LargeNum operator%(const LargeNum &a, const LargeNum &b) {
         }
         result[j] = n;
     }
-    return c;
+    return std::move(c);
 }
 
 int operator%(const LargeNum &a, int b) {
