@@ -33,7 +33,7 @@ int main() {
             } else {
                 a[i][j] = a[i - 1][j - 1] + a[i - 1][j];
             }
-            cout << a[i][j] <<"     ";
+            cout << setw(6) << a[i][j];
         }
         cout << endl;
     }

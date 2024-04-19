@@ -29,6 +29,8 @@ public:
 
     std::string toString() const;
     friend std::ostream &operator<<(std::ostream &out, const LargeNum &a);
+    bool isInt() const;
+    bool isLongLong() const;
     int toInt() const;
     long long toLongLong() const;
 

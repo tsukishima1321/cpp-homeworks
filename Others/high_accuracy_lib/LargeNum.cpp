@@ -157,6 +157,24 @@ std::string LargeNum::toString() const {
     return res;
 }
 
+bool LargeNum::isInt() const {
+    for (int i = MAX_N - 1; i >= 0; i--) {
+        if (_data[i] != 0) {
+            return i < 9;
+        }
+    }
+    return true;
+}
+
+bool LargeNum::isLongLong() const {
+    for (int i = MAX_N - 1; i >= 0; i--) {
+        if (_data[i] != 0) {
+            return i < 18;
+        }
+    }
+    return true;
+}
+
 long long LargeNum::toLongLong() const {
     bool f = false;
     long long res = 0;
