@@ -46,9 +46,7 @@ LargeNum::LargeNum(long long a) : LargeNum::LargeNum() {
 
 LargeNum::LargeNum(const LargeNum &from) : LargeNum::LargeNum() {
     error = from.error;
-    for (int i = 0; i < MAX_N; i++) {
-        _data[i] = from._data[i];
-    }
+    memcpy(_data, from._data, MAX_N);
     _sign = from._sign;
 }
 
@@ -72,15 +70,11 @@ LargeNum::LargeNum(char *a, bool sg) {
 }
 
 LargeNum::LargeNum(const char a[MAX_N]) : LargeNum() {
-    for (int i = 0; i < MAX_N; i++) {
-        _data[i] = a[i];
-    }
+    memcpy(_data, a, MAX_N);
 }
 
 LargeNum::LargeNum(const char a[MAX_N], bool sg) : LargeNum() {
-    for (int i = 0; i < MAX_N; i++) {
-        _data[i] = a[i];
-    }
+    memcpy(_data, a, MAX_N);
     _sign = sg;
 }
 
@@ -112,9 +106,7 @@ LargeNum &LargeNum::operator=(const LargeNum &from) {
     if (&from == this) {
         return *this;
     }
-    for (int i = 0; i < MAX_N; i++) {
-        _data[i] = from._data[i];
-    }
+    memcpy(_data, from._data, MAX_N);
     error = from.error;
     _sign = from._sign;
     return *this;
