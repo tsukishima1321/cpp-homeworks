@@ -12,6 +12,7 @@ int max(int a, int b) {
 }
 
 // 函数的声明和定义分开进行
+// 该函数的声明在全局作用域中，因此在此后的代码中都可以调用该函数
 int min(int a, int b);
 
 void printMax(int a, int b) {
@@ -103,6 +104,9 @@ int main() {
 
     printMax(a, b);
 
+    // 在main函数中声明min函数
+    // 该声明的作用域仅限于main函数，如果此前没有在全局作用域中声明min函数，则只有在main函数中才能调用min函数
+    int min(int, int);
     // 函数的声明必须在调用之前，函数的定义可以在调用之后
     // 无论函数的定义是否可见，只要函数经过声明，对函数的调用就是合法的
     std::cout << "The min number is: " << min(a, b) << std::endl;
