@@ -1,7 +1,12 @@
 // examples for cstring
 //
+
 #include <cstring>
 #include <iostream>
+// 使用c库函数时，如果#include<string.h>，则函数会引入到全局命名空间中，调用时不需要加std::前缀
+// 如果#include<cstring>，则函数会同时引入到std命名空间和全局命名空间中，可以使用std::也可以直接调用
+// 如果你（在全局命名空间中）定义了和cstring中相同名字的函数，那么不加std::前缀的话，会调用你定义的函数，加上std::前缀则会调用cstring中的函数
+// 其他继承自C的C++标准库头文件也同理，如cstdio、cstdlib等
 
 int main() {
 
