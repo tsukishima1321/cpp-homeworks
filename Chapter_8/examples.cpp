@@ -53,6 +53,16 @@ void print_array(const int *arr, int size) {
     std::cout << std::endl;
 }
 
+// 实现strcpy:
+void my_strcpy(char *dest, const char *src) {
+    while (*src != '\0') {
+        *dest = *src;
+        ++dest;
+        ++src;
+    }
+    *dest = '\0';
+}
+
 // 返回指针的函数
 // 从数组中查找指定的值，如果找到返回指向该值的指针，否则返回指向数组尾部的指针
 int *find(int *begin, int *end, int value) {
