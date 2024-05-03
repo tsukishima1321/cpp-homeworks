@@ -45,8 +45,7 @@ void devide_pointer(int a, int b, int *quotient, int *remainder) {
 }
 
 // 用const修饰指针或引用参数
-//  1. 传递指针参数时，如果不希望函数修改指针所指向的内容，可以使用const修饰指针参数
-//  2. 传递引用参数时，如果不希望函数修改引用所引用的内容，可以使用const修饰引用参数
+//  传递指针/引用参数时，如果不希望函数修改指针/引用所指向的内容，可以使用const修饰参数
 void print_array(const int *arr, int size) {
     for (int i = 0; i < size; ++i) {
         std::cout << arr[i] << " ";
@@ -91,6 +90,7 @@ int main() {
     int data[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     int a = 10;
     int b = 20;
+
     printMax(a, b);
 
     // 函数的声明必须在调用之前，函数的定义可以在调用之后
@@ -154,6 +154,7 @@ int main() {
     return 0;
 }
 
+// 函数的定义
 int min(int a, int b) {
     return a < b ? a : b;
 }
