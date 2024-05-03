@@ -6,6 +6,11 @@ int main() {
     // 这个例子中global_var定义在同时编译的util.cpp中
     extern int global_var;
     std::cout << global_var << std::endl;
+
+    // 同样地，extern声明也可以用于函数
+    extern int add(int a, int b);
+    std::cout << add(1, 2) << std::endl;
+    
     system("pause");
     return 0;
 }
