@@ -4,7 +4,11 @@
 
 // 函数的声明和定义同时进行
 int max(int a, int b) {
-    return a > b ? a : b;
+    if (a > b) {
+        return a;
+    } else {
+        return b;
+    }
 }
 
 // 函数的声明和定义分开进行
@@ -112,7 +116,7 @@ int main() {
     // 返回指针的函数
     int *p = find(data, data + 10, 5);
     if (p != data + 10) {
-        std::cout << "Found value: " << *p << std::endl;
+        std::cout << "Found value: " << *p << " at index: " << p - data << std::endl;
     } else {
         std::cout << "Not found!" << std::endl;
     }
@@ -125,6 +129,10 @@ int main() {
     print_array(arr, 10);
     // 释放动态分配的内存
     delete[] arr;
+
+    int *p_int = new_int();
+    std::cout << "The value of p_int is: " << *p_int << std::endl;
+    delete p_int;
 
     // 返回引用的函数
     int value = get(data, 5);
