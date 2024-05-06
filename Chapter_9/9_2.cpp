@@ -7,25 +7,25 @@
 
 using namespace std;
 
-char  *get_max(char s[]){
-	char *imax = s;
-	for(char *i = s;*i != '\0';i++){
-		if(*i > *imax){
-			imax = i;
-		}
-	}
-	return imax;
+char  *get_max(char s[]) {
+    char *imax = s;
+    for(char *i = s;*i != '\0';i++){
+        if(*i > *imax){
+            imax = i;
+        }
+    }
+    return imax;
 }
 
-int main(){
-	char s[100];
-	cin.getline(s,100);
-	for(char *i = get_max(s);*i != '\0';i++){
-		if('a' <= *i && *i <= 'z'){
-			*i += 'A' - 'a';
-		}
-	}
-	cout<< s << endl;
-	system("pause");
-	return 0;
+int main() {
+    char s[100];
+    cin.getline(s,100);
+    for(char *i = get_max(s);*i != '\0';i++){
+        if('a' <= *i && *i <= 'z'){
+            *i += 'A' - 'a';
+        }
+    }
+    cout<< s << endl;
+    system("pause");
+    return 0;
 }
