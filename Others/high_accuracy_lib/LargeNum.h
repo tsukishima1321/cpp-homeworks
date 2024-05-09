@@ -22,6 +22,7 @@ public:
 
     LargeNum &operator=(const LargeNum &from);
     LargeNum &operator=(LargeNum &&from);
+    //friend LargeNum &operator=(LargeNum &&a, LargeNum &b) = delete;
 
     void FromStream(std::istream &in);
     static LargeNum fromString(std::string str);

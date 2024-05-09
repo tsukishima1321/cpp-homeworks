@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /**
  * TODO:
@@ -18,58 +19,59 @@
  * will result in ["is", "name", "my", "hello"]
  */
 
-void swap(char **front, char **end)
-{
+void swap(char **front, char **end) {
     char *mid = *front;
     *front = *end;
     *end = mid;
 }
 
-void reverse_arr(char **arr, int num)
-{
-    for (int i = 0; i < num / 2; i++)
-    {
+void reverse_arr(char **arr, int num) {
+    for (int i = 0; i < num / 2; i++) {
         char **front = arr + i;
         char **end = arr + num - i - 1;
         swap(front, end);
     }
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     int num_elements = atoi(argv[1]);
-    char *arr[num_elements];
-    for (int i = 0; i < num_elements; i++)
-    {
-        arr[i] = argv[i + 2];
+    char **arr;
+    arr = (char **)malloc(sizeof(char *) * num_elements);
+    for (int i = 0; i < num_elements; i++) {
+        // arr[i] = argv[i + 2];
+        arr[i] = (char *)malloc(sizeof(char) * 100);
+        strcpy(arr[i], argv[i + 2]);
     }
 
-    if (argc == 1)
-    {
+    if (argc == 1) {
         int num = 4;
-        char *test_arr[4] = {"Hello", "From", "SUSY", "BAKA"};
-        for (int i = 0; i < num; i++)
-        {
+        // char *test_arr[4] = {"Hello", "From", "SUSY", "BAKA"};
+        char *test_arr[4];
+        test_arr[0] = (char *)malloc(sizeof(char) * 100);
+        test_arr[1] = (char *)malloc(sizeof(char) * 100);
+        test_arr[2] = (char *)malloc(sizeof(char) * 100);
+        test_arr[3] = (char *)malloc(sizeof(char) * 100);
+        strcpy(test_arr[0], "Hello");
+        strcpy(test_arr[1], "From");
+        strcpy(test_arr[2], "SUSY");
+        strcpy(test_arr[3], "BAKA");
+        for (int i = 0; i < num; i++) {
             printf("word: %s\n", test_arr[i]);
         }
         char **arr = &test_arr[0];
         reverse_arr(arr, num);
-        for (int i = 0; i < num; i++)
-        {
+        for (int i = 0; i < num; i++) {
             printf("word: %s\n", test_arr[i]);
         }
     }
-    if (argc > 1)
-    {
+    if (argc > 1) {
         int num = num_elements;
         char **test_arr = arr;
-        for (int i = 0; i < num; i++)
-        {
+        for (int i = 0; i < num; i++) {
             printf("word: %s\n", test_arr[i]);
         }
         reverse_arr(test_arr, num);
-        for (int i = 0; i < num; i++)
-        {
+        for (int i = 0; i < num; i++) {
             printf("word: %s\n", test_arr[i]);
         }
     }
