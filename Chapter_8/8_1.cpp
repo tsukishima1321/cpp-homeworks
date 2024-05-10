@@ -18,14 +18,12 @@ bool isprime(int m) {
 }
 
 int main() {
-    int i = 1;
     int count = 0;
-    while (1) {
+    for (int i = 1;; ++i) {
         if (isprime(i) && isprime(i + 2)) {
             printf("(%d, %d)\n", i, i + 2);
             count++;
         }
-        i++;
         if (count == 10) {
             break;
         }

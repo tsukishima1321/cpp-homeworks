@@ -7,8 +7,7 @@
 using namespace std;
 
 void freq(char s[], int p[], char &chmax, int &max) {
-    int n = strlen(s);
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; s[i] != '\0'; i++) {
         if ('a' <= s[i] && s[i] <= 'z') {
             p[s[i] - 'a']++;
         }
@@ -33,7 +32,7 @@ int main() {
     int max;
     int freqs[26] = {};
     freq(s, freqs, cmax, max);
-    for(int i = 0; i < 26; i++) {
+    for (int i = 0; i < 26; i++) {
         cout << (char)('a' + i) << "----" << freqs[i] << endl;
     }
     cout << "max: " << cmax << "----" << max << endl;

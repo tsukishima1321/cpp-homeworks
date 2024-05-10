@@ -3,10 +3,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct node_t {
+typedef struct node {
     void *data;
-    struct node_t *next;
-};
+    node_t *next;
+} node_t;
 
 void *remove_first(node_t **head_list) {
     if (*head_list == NULL) {
