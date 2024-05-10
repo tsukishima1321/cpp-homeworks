@@ -1,3 +1,5 @@
+#include <concepts>
+
 template <typename T>
 class BinaryTree {
 protected:
@@ -27,9 +29,11 @@ protected:
         ~TreeNode() {
             if (left != nullptr) {
                 delete left;
+                left = nullptr;
             }
             if (right != nullptr) {
                 delete right;
+                right = nullptr;
             }
         }
     };
@@ -410,9 +414,13 @@ public:
         if (node == nullptr) {
             return;
         }
-        clear(node->left);
-        clear(node->right);
-        delete node;
+        if (node->left != nullptr) {
+            delete node->left;
+        }
+        if (node->right != nullptr) {
+            delete node->right;
+        }
+        return;
     }
 
     iterator eraseSubTree(iterator &itr) {
@@ -432,12 +440,27 @@ public:
         return itr.parent();
     }
 
-    template <Order_t _order>
+    iterator eraseSubTree(iterator &&itr) {
+        if (itr.fromTree != this)
+            throw "NotFromThisTree";
+        if (itr.now == root)
+            throw "CannotEraseRoot";
+        clear(itr.now);
+        if (itr.now->parent != nullptr) {
+            if (itr.now->parent->left == itr.now) {
+                itr.now->parent->left = nullptr;
+            } else {
+                itr.now->parent->right = nullptr;
+            }
+        }
+        return itr.parent();
+    }
+
+    template <Order_t _order, typename _Val>
     class TreeIter {
         using _Tree = BinaryTree;
         using _TreeNode = _Tree::TreeNode;
-        using _Iterator = std::conditional_t<_order == PREORDER, preorder_iterator,
-                                             std::conditional_t<_order == INORDER, inorder_iterator, postorder_iterator>>;
+        using _Iterator = _Iterator<_Val, _order>;
         using _sentinel = _Tree::iterator;
 
     private:
@@ -477,7 +500,7 @@ public:
         };
 
     public:
-        TreeIter(_Tree &tree) : _tree(tree), _begin(tree.root_node().now, &tree), _end(nullptr, &tree), _front_of_end(tree.root_node()) {
+        TreeIter(const _Tree &tree) : _tree(tree), _begin(tree.root_node().now, &tree), _end(nullptr, &tree), _front_of_end(tree.root_node()) {
             if constexpr (_order == PREORDER) {
                 while (_front_of_end.hasRight()) {
                     _front_of_end.moveRight();
@@ -517,19 +540,44 @@ public:
         iterator end() {
             return _end;
         }
-        _Tree &_tree;
+        const _Tree &_tree;
         iterator _begin;
         iterator _end;
         _sentinel _front_of_end;
     };
 
-    TreeIter<PREORDER> preIter() {
-        return TreeIter<PREORDER>(*this);
+    using PreorderIter = TreeIter<PREORDER, T>;
+    using InorderIter = TreeIter<INORDER, T>;
+    using PostorderIter = TreeIter<POSTORDER, T>;
+    using PreorderIterConst = TreeIter<PREORDER, const T>;
+    using InorderIterConst = TreeIter<INORDER, const T>;
+    using PostorderIterConst = TreeIter<POSTORDER, const T>;
+
+    PreorderIter preIter() {
+        return PreorderIter(*this);
     }
-    TreeIter<INORDER> inIter() {
-        return TreeIter<INORDER>(*this);
+    InorderIter inIter() {
+        return InorderIter(*this);
     }
-    TreeIter<POSTORDER> postIter() {
-        return TreeIter<POSTORDER>(*this);
+    PostorderIter postIter() {
+        return PostorderIter(*this);
+    }
+    PreorderIterConst preIter() const {
+        return PreorderIterConst(*this);
+    }
+    InorderIterConst inIter() const {
+        return InorderIterConst(*this);
+    }
+    PostorderIterConst postIter() const {
+        return PostorderIterConst(*this);
+    }
+    PreorderIterConst preIterConst() {
+        return PreorderIterConst(*this);
+    }
+    InorderIterConst inIterConst() {
+        return InorderIterConst(*this);
+    }
+    PostorderIterConst postIterConst() {
+        return PostorderIterConst(*this);
     }
 };
