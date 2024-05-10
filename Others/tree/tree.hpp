@@ -1,12 +1,7 @@
 #include <concepts>
 
 template <typename T>
-class TreeRangePreorder;
-
-template <typename T>
 class BinaryTree {
-    friend class TreeRangePreorder<T>;
-
 protected:
     static bool max(const std::size_t &a, const std::size_t &b) {
         return a > b ? a : b;
@@ -47,7 +42,7 @@ protected:
         INORDER = 0,
         POSTORDER = 1,
     };
-    template <std::totally_ordered _Val>
+    template <typename _Val>
     class _FreeIterator {
         using _Self_t = _FreeIterator<_Val>;
 
@@ -122,13 +117,18 @@ protected:
         }
     };
 
-    template <std::totally_ordered _Val, Order_t _Order>
+    template <typename _Val, Order_t _order>
     class _Iterator {
-        using _Self_t = _Iterator<_Val, _Order>;
+        using _Self_t = _Iterator<_Val, _order>;
+        friend class BinaryTree;
 
     protected:
+        TreeNode *now;
+        const BinaryTree *fromTree;
         void next() {
-            if constexpr (_Order == PREORDER) {
+            if constexpr (_order == PREORDER) {
+                if (now == nullptr)
+                    throw "OutOfRange:End";
                 if (now->left != nullptr) {
                     now = now->left;
                     return;
@@ -145,13 +145,15 @@ protected:
                     now = now->parent;
                 }
             }
-            if constexpr (_Order == INORDER) {
+            if constexpr (_order == INORDER) {
             }
-            if constexpr (_Order == POSTORDER) {
+            if constexpr (_order == POSTORDER) {
             }
         }
         void last() {
-            if constexpr (_Order == PREORDER) {
+            if constexpr (_order == PREORDER) {
+                if (now == nullptr)
+                    throw "OutOfRange:End";
                 if (now->parent) {
                     if (now == now->parent->left)
                         now = now->parent;
@@ -167,23 +169,21 @@ protected:
                         now = now->right;
                 }
             }
-            if constexpr (_Order == INORDER) {
+            if constexpr (_order == INORDER) {
             }
-            if constexpr (_Order == POSTORDER) {
+            if constexpr (_order == POSTORDER) {
             }
         }
 
     public:
-        TreeNode *now;
-        const BinaryTree *fromTree;
         _Iterator(const TreeNode *root, const BinaryTree *fromTree, bool init = true) noexcept : fromTree(fromTree) {
             now = const_cast<TreeNode *>(root);
             if (init) {
-                if constexpr (_Order == PREORDER) {
+                if constexpr (_order == PREORDER) {
                 }
-                if constexpr (_Order == INORDER) {
+                if constexpr (_order == INORDER) {
                 }
-                if constexpr (_Order == POSTORDER) {
+                if constexpr (_order == POSTORDER) {
                 }
             }
         }
@@ -282,15 +282,6 @@ public:
     postorder_const_iterator const_postorder() const {
         return postorder_const_iterator(root, this);
     }
-    preorder_iterator preorder_end() {
-        return preorder_iterator(nullptr, this);
-    }
-    inorder_iterator inorder_end() {
-        return inorder_iterator(nullptr, this);
-    }
-    postorder_iterator postorder_end() {
-        return postorder_iterator(nullptr, this);
-    }
     preorder_iterator preorder(const iterator &itr) {
         if (itr.fromTree != this)
             throw "NotFromThisTree";
@@ -366,61 +357,68 @@ public:
         itr.now = nullptr;
         return itr.parent();
     }
-};
 
-template <typename T>
-class TreeRangePreorder {
-    using _Tree = BinaryTree<T>;
-    using _Iterator = _Tree::preorder_iterator;
-
-private:
-    class iterator {
-    public:
-        iterator(_Iterator itr, _Tree &tree) : _itr(itr), _tree(tree) {}
-        iterator &operator++() {
-            _itr++;
-            if (_itr.toFreeIterator() == _tree.root_node()) {
-                _itr = _tree.preorder_end();
-            }
-            return *this;
-        }
-        iterator operator++(int) {
-            iterator formal = *this;
-            _itr++;
-            if (_itr.toFreeIterator() == _tree.root_node()) {
-                _itr = _tree.preorder_end();
-            }
-            return formal;
-        }
-        T &operator*() {
-            return *_itr;
-        }
-        T *operator->() {
-            return _itr.operator->();
-        }
-        bool operator==(const iterator &itr) const {
-            return _itr == itr._itr;
-        }
-        bool operator!=(const iterator &itr) const {
-            return _itr != itr._itr;
-        }
+    template <Order_t _order>
+    class TreeIter {
+        using _Tree = BinaryTree;
+        using _TreeNode = _Tree::TreeNode;
+        using _Iterator = std::conditional_t<_order == PREORDER, preorder_iterator,
+                                             std::conditional_t<_order == INORDER, inorder_iterator, postorder_iterator>>;
 
     private:
-        _Iterator _itr;
+        class iterator : public _Iterator {
+        public:
+            iterator(const _TreeNode *root, const _Tree *tree) : _Iterator(root, tree) {}
+            iterator &operator++() {
+                this->next();
+                if constexpr (_order == PREORDER) {
+                    if (this->now == this->fromTree->root_node().now) {
+                        this->now = nullptr;
+                    }
+                    return *this;
+                }
+                if constexpr (_order == INORDER) {
+                }
+                if constexpr (_order == POSTORDER) {
+                }
+            }
+            iterator operator++(int) {
+                iterator formal = *this;
+                this->next();
+                if constexpr (_order == PREORDER) {
+                    if (this->now == this->fromTree->root_node().now) {
+                        this->now = nullptr;
+                    }
+                    return formal;
+                }
+                if constexpr (_order == INORDER) {
+                }
+                if constexpr (_order == POSTORDER) {
+                }
+            }
+        };
+
+    public:
+        TreeIter(_Tree &tree) : _tree(tree), _begin(tree.root_node().now, &tree), _end(nullptr, &tree) {
+        }
+        iterator begin() {
+            return _begin;
+        }
+        iterator end() {
+            return _end;
+        }
         _Tree &_tree;
+        iterator _begin;
+        iterator _end;
     };
 
-public:
-    TreeRangePreorder(_Tree &tree) : _tree(tree), _begin(tree.preorder(), tree), _end(tree.preorder_end(), tree) {
+    TreeIter<PREORDER> preIter() {
+        return TreeIter<PREORDER>(*this);
     }
-    iterator begin() {
-        return _begin;
+    TreeIter<INORDER> inIter() {
+        return TreeIter<INORDER>(*this);
     }
-    iterator end() {
-        return _end;
+    TreeIter<POSTORDER> postIter() {
+        return TreeIter<POSTORDER>(*this);
     }
-
-    _Tree &_tree;
-    iterator _begin;
-    iterator _end;
 };

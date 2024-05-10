@@ -18,13 +18,19 @@ int main() {
     tree.insertRight(it, 'E');
 
     std::cout << "Preorder traversal: ";
-    for (auto &i : TreeRangePreorder<char>(tree)) {
+    for (auto &i : tree.preIter()) {
         std::cout << i << " ";
-        i += 1;
+    }
+    auto treeView = tree.preIter();
+    for (auto i = treeView.begin(); i != treeView.end(); ++i) {
+        if (*i == 'D') {
+            tree.insertLeft(i, 'F');
+            tree.insertRight(i, 'G');
+        }
     }
     std::cout << std::endl;
     std::cout << "Modified tree: ";
-    for (auto &i : TreeRangePreorder<char>(tree)) {
+    for (auto &i : tree.preIter()) {
         std::cout << i << " ";
     }
     std::cout << std::endl;
