@@ -45,12 +45,19 @@ protected:
     template <typename _Val>
     class _FreeIterator {
         using _Self_t = _FreeIterator<_Val>;
+        friend class BinaryTree;
 
-    public:
+    protected:
         TreeNode *now;
         const BinaryTree *fromTree;
+
+    public:
         _FreeIterator(const TreeNode *root, const BinaryTree *fromTree) noexcept : fromTree(fromTree) {
             now = const_cast<TreeNode *>(root);
+        }
+
+        _FreeIterator(const _FreeIterator<const _Val> &itr) noexcept : fromTree(itr.fromTree) {
+            now = const_cast<TreeNode *>(itr.now);
         }
 
         _Val *operator->() const {
@@ -146,8 +153,43 @@ protected:
                 }
             }
             if constexpr (_order == INORDER) {
+                if (now->right) {
+                    now = now->right;
+                    while (now->left)
+                        now = now->left;
+                } else if (now->parent && now == now->parent->left)
+                    now = now->parent;
+                else if (now->parent && now == now->parent->right) {
+                    bool right_jump = true;
+                    do {
+                        if (now->parent->left == now) {
+                            now = now->parent;
+                            right_jump = false;
+                            break;
+                        }
+                        now = now->parent;
+                    } while (now->parent);
+                    if (right_jump && now->parent == nullptr)
+                        while (now->left)
+                            now = now->left;
+                } else {
+                    while (now->left)
+                        now = now->left;
+                }
             }
             if constexpr (_order == POSTORDER) {
+                if (now->parent && now->parent->right == nullptr && now->parent->left == now)
+                    now = now->parent;
+                else if (now->parent && now->parent->right == now)
+                    now = now->parent;
+                else if (now->parent && now->parent->right != nullptr && now->parent->left == now) {
+                    now = now->parent->right;
+                    while (now->left || now->right)
+                        now = now->left == nullptr ? now->right : now->left;
+                } else {
+                    while (now->left || now->right)
+                        now = now->left == nullptr ? now->right : now->left;
+                }
             }
         }
         void last() {
@@ -170,22 +212,56 @@ protected:
                 }
             }
             if constexpr (_order == INORDER) {
+                if (now->left) {
+                    now = now->left;
+                    while (now->right)
+                        now = now->right;
+                } else if (now->parent) {
+                    if (now == now->parent->right)
+                        now = now->parent;
+                    else {
+                        bool left_jump = true;
+                        do {
+                            if (now == now->parent->right) {
+                                left_jump = false;
+                                now = now->parent;
+                                break;
+                            }
+                            now = now->parent;
+                        } while (now->parent);
+                        if (left_jump && now->parent == nullptr)
+                            while (now->right)
+                                now = now->right;
+                    }
+                } else {
+                    while (now->right)
+                        now = now->right;
+                }
             }
             if constexpr (_order == POSTORDER) {
+                if (now->right)
+                    now = now->right;
+                else if (now->left)
+                    now = now->left;
+                else if (now->parent) {
+                    do {
+                        if (now->parent->left != nullptr && now->parent->right == now) {
+                            now = now->parent->left;
+                            break;
+                        }
+                        now = now->parent;
+                    } while (now->parent);
+                }
             }
         }
 
     public:
-        _Iterator(const TreeNode *root, const BinaryTree *fromTree, bool init = true) noexcept : fromTree(fromTree) {
+        _Iterator(const TreeNode *root, const BinaryTree *fromTree) noexcept : fromTree(fromTree) {
             now = const_cast<TreeNode *>(root);
-            if (init) {
-                if constexpr (_order == PREORDER) {
-                }
-                if constexpr (_order == INORDER) {
-                }
-                if constexpr (_order == POSTORDER) {
-                }
-            }
+        }
+
+        _Iterator(const _FreeIterator<const _Val> &itr) noexcept : fromTree(itr.fromTree) {
+            now = const_cast<TreeNode *>(itr.now);
         }
 
         operator _FreeIterator<_Val>() const {
@@ -364,42 +440,78 @@ public:
         using _TreeNode = _Tree::TreeNode;
         using _Iterator = std::conditional_t<_order == PREORDER, preorder_iterator,
                                              std::conditional_t<_order == INORDER, inorder_iterator, postorder_iterator>>;
+        using _sentinel = _Tree::iterator;
 
     private:
         class iterator : public _Iterator {
+            friend class TreeIter;
+
         public:
-            iterator(const _TreeNode *root, const _Tree *tree) : _Iterator(root, tree) {}
+            iterator(const _TreeNode *root, const _Tree *tree) : _Iterator(root, tree), reachEnd(false) {
+            }
             iterator &operator++() {
                 this->next();
-                if constexpr (_order == PREORDER) {
-                    if (this->now == this->fromTree->root_node().now) {
-                        this->now = nullptr;
-                    }
+                if (reachEnd) {
+                    this->now = nullptr;
                     return *this;
                 }
-                if constexpr (_order == INORDER) {
+                if (this->now == (*_front_of_end).now) {
+                    reachEnd = true;
                 }
-                if constexpr (_order == POSTORDER) {
-                }
+                return *this;
             }
             iterator operator++(int) {
                 iterator formal = *this;
                 this->next();
-                if constexpr (_order == PREORDER) {
-                    if (this->now == this->fromTree->root_node().now) {
-                        this->now = nullptr;
-                    }
-                    return formal;
+                if (reachEnd) {
+                    this->now = nullptr;
+                    return *this;
                 }
-                if constexpr (_order == INORDER) {
+                if (this->now == (*_front_of_end).now) {
+                    reachEnd = true;
                 }
-                if constexpr (_order == POSTORDER) {
-                }
+                return formal;
             }
+
+        private:
+            bool reachEnd;
+            _sentinel *_front_of_end;
         };
 
     public:
-        TreeIter(_Tree &tree) : _tree(tree), _begin(tree.root_node().now, &tree), _end(nullptr, &tree) {
+        TreeIter(_Tree &tree) : _tree(tree), _begin(tree.root_node().now, &tree), _end(nullptr, &tree), _front_of_end(tree.root_node()) {
+            if constexpr (_order == PREORDER) {
+                while (_front_of_end.hasRight()) {
+                    _front_of_end.moveRight();
+                }
+                while (_front_of_end.hasLeft()) {
+                    _front_of_end.moveLeft();
+                }
+            }
+            if constexpr (_order == INORDER) {
+                auto begin = tree.root_node();
+                while (begin.hasLeft()) {
+                    begin.moveLeft();
+                }
+                _begin.now = begin.now;
+                while (_front_of_end.hasRight()) {
+                    _front_of_end.moveRight();
+                }
+            }
+            if constexpr (_order == POSTORDER) {
+                auto begin = tree.root_node();
+                while (begin.hasLeft() || begin.hasRight()) {
+                    while (begin.hasLeft()) {
+                        begin.moveLeft();
+                    }
+                    if (begin.hasRight()) {
+                        begin.moveRight();
+                    }
+                }
+                _begin.now = begin.now;
+                _front_of_end = tree.root_node();
+            }
+            _begin._front_of_end = &_front_of_end;
         }
         iterator begin() {
             return _begin;
@@ -410,6 +522,7 @@ public:
         _Tree &_tree;
         iterator _begin;
         iterator _end;
+        _sentinel _front_of_end;
     };
 
     TreeIter<PREORDER> preIter() {

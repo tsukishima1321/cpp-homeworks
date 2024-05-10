@@ -10,27 +10,31 @@ int main() {
     using Tree = BinaryTree<char>;
     Tree tree;
     auto it = tree.root_node();
-    *it = 'A';
-    tree.insertLeft(it, 'B');
-    tree.insertRight(it, 'C');
-    it = it.right();
-    tree.insertLeft(it, 'D');
-    tree.insertRight(it, 'E');
+    *it = '1';
+    tree.insertLeft(it, '2');  
+    tree.insertRight(it, '3');
+    it.moveLeft();
+    tree.insertLeft(it, '4');
+    tree.insertRight(it, '5');
+    it.moveParent();
+    it.moveRight();
+    tree.insertLeft(it, '6');
+    tree.insertRight(it, '7');
 
     std::cout << "Preorder traversal: ";
     for (auto &i : tree.preIter()) {
         std::cout << i << " ";
     }
-    auto treeView = tree.preIter();
-    for (auto i = treeView.begin(); i != treeView.end(); ++i) {
-        if (*i == 'D') {
-            tree.insertLeft(i, 'F');
-            tree.insertRight(i, 'G');
-        }
+    std::cout << std::endl;
+
+    std::cout << "Inorder traversal: ";
+    for (auto &i : tree.inIter()) {
+        std::cout << i << " ";
     }
     std::cout << std::endl;
-    std::cout << "Modified tree: ";
-    for (auto &i : tree.preIter()) {
+
+    std::cout << "Postorder traversal: ";
+    for (auto &i : tree.postIter()) {
         std::cout << i << " ";
     }
     std::cout << std::endl;
