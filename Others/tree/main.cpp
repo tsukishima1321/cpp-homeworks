@@ -21,6 +21,9 @@ int main() {
     tree.insertLeft(it, '6');
     tree.insertRight(it, '7');
 
+    std::cout << "Tree height: " << tree.height() << std::endl;
+    std::cout << "Tree size: " << tree.size() << std::endl;
+
     std::cout << "Preorder traversal: ";
     for (auto &i : tree.preIter()) {
         std::cout << i << " ";
@@ -43,7 +46,7 @@ int main() {
     const Tree &ctree = tree;
     std::cout << "Postorder traversal: ";
     for (auto &i : ctree.postIter()) {
-        //i += 1; //error
+        // i += 1; //error
         std::cout << i << " ";
     }
 

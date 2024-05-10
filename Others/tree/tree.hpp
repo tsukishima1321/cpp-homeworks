@@ -3,7 +3,7 @@
 template <typename T>
 class BinaryTree {
 protected:
-    static bool max(const std::size_t &a, const std::size_t &b) {
+    static std::size_t max(const std::size_t &a, const std::size_t &b) {
         return a > b ? a : b;
     }
     class TreeNode {
@@ -13,16 +13,10 @@ protected:
         TreeNode *right;
         TreeNode *parent;
         std::size_t height() {
-            if (this == nullptr) {
-                return 0;
-            }
-            return max(left->height(), right->height()) + 1;
+            return max(left ? left->height() : 0, right ? right->height() : 0) + 1;
         }
         std::size_t size() {
-            if (this == nullptr) {
-                return 0;
-            }
-            return left->size() + right->size() + 1;
+            return (left ? left->size() : 0) + (right ? right->size() : 0) + 1;
         }
         TreeNode() : left(nullptr), right(nullptr), parent(nullptr) {}
         TreeNode(const T &val) : data(val), left(nullptr), right(nullptr), parent(nullptr) {}
