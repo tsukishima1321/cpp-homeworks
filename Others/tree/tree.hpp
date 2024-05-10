@@ -365,7 +365,7 @@ public:
             throw "NotFromThisTree";
         return preorder_iterator(itr.now, this);
     }
-    preorder_const_iterator preorder(const const_iterator &itr) {
+    preorder_const_iterator preorder(const const_iterator &itr) const {
         if (itr.fromTree != this)
             throw "NotFromThisTree";
         return preorder_const_iterator(itr.now, this);
@@ -375,7 +375,7 @@ public:
             throw "NotFromThisTree";
         return inorder_iterator(itr.now, this);
     }
-    inorder_const_iterator inorder(const const_iterator &itr) {
+    inorder_const_iterator inorder(const const_iterator &itr) const {
         if (itr.fromTree != this)
             throw "NotFromThisTree";
         return inorder_const_iterator(itr.now, this);
@@ -385,7 +385,7 @@ public:
             throw "NotFromThisTree";
         return postorder_iterator(itr.now, this);
     }
-    postorder_const_iterator postorder(const const_iterator &itr) {
+    postorder_const_iterator postorder(const const_iterator &itr) const {
         if (itr.fromTree != this)
             throw "NotFromThisTree";
         return postorder_const_iterator(itr.now, this);
@@ -461,7 +461,7 @@ public:
         using _Tree = BinaryTree;
         using _TreeNode = _Tree::TreeNode;
         using _Iterator = _Iterator<_Val, _order>;
-        using _sentinel = _Tree::iterator;
+        using _Sentinel = _Tree::iterator;
 
     private:
         class iterator : public _Iterator {
@@ -496,7 +496,7 @@ public:
 
         private:
             bool reachEnd;
-            _sentinel *_front_of_end;
+            _Sentinel *_front_of_end;
         };
 
     public:
@@ -543,7 +543,7 @@ public:
         const _Tree &_tree;
         iterator _begin;
         iterator _end;
-        _sentinel _front_of_end;
+        _Sentinel _front_of_end;
     };
 
     using PreorderIter = TreeIter<PREORDER, T>;
