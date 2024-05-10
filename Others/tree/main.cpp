@@ -2,6 +2,7 @@
 //
 #include "tree.hpp"
 #include <iostream>
+#include <algorithm>
 
 int main() {
 #ifdef _WIN32
@@ -50,6 +51,7 @@ int main() {
         std::cout << i << " ";
     }
 
+    
     tree.eraseSubTree(tree.root_node().right());
 
     std::cout << "Inorder traversal: ";
@@ -57,6 +59,28 @@ int main() {
         std::cout << i << " ";
     }
     std::cout << std::endl;
+
+    using SearchTree = SearchBinaryTree<int>;
+    SearchTree stree;
+    stree.insert(5);
+    stree.insert(3);
+    stree.insert(7);
+    stree.insert(2);
+    stree.insert(4);
+    stree.insert(6);
+    stree.insert(8);
+
+    std::cout << "Inorder traversal: ";
+    for (auto &i : stree.inIter()) {
+        std::cout << i << " ";
+    }
+    std::cout << std::endl;
+    auto r = stree.search(5);
+    if (r) {
+        std::cout << "Found: " << *r << std::endl;
+    } else {
+        std::cout << "Not found" << std::endl;
+    }
 
     system("pause");
     return 0;

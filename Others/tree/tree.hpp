@@ -18,7 +18,7 @@ protected:
         std::size_t size() {
             return (left ? left->size() : 0) + (right ? right->size() : 0) + 1;
         }
-        TreeNode() : left(nullptr), right(nullptr), parent(nullptr) {}
+        TreeNode() : left(nullptr), right(nullptr), parent(nullptr), data() {}
         TreeNode(const T &val) : data(val), left(nullptr), right(nullptr), parent(nullptr) {}
         ~TreeNode() {
             if (left != nullptr) {
@@ -54,6 +54,10 @@ protected:
 
         _FreeIterator(const _FreeIterator<const _Val> &itr) noexcept : fromTree(itr.fromTree) {
             now = const_cast<TreeNode *>(itr.now);
+        }
+
+        operator bool() const {
+            return now != nullptr;
         }
 
         _Val *operator->() const {
@@ -260,6 +264,10 @@ protected:
             now = const_cast<TreeNode *>(itr.now);
         }
 
+        operator bool() const {
+            return now != nullptr;
+        }
+
         operator _FreeIterator<_Val>() const {
             return _FreeIterator<_Val>(now, fromTree);
         }
@@ -457,7 +465,7 @@ public:
         using _Iterator = _Iterator<_Val, _order>;
         using _Sentinel = _Tree::iterator;
 
-    private:
+    protected:
         class iterator : public _Iterator {
             friend class TreeIter;
 
@@ -488,9 +496,9 @@ public:
                 return formal;
             }
 
-        private:
+        protected:
             bool reachEnd;
-            _Sentinel *_front_of_end;
+            const _Sentinel *_front_of_end;
         };
 
     public:
@@ -534,6 +542,8 @@ public:
         iterator end() {
             return _end;
         }
+
+    protected:
         const _Tree &_tree;
         iterator _begin;
         iterator _end;
@@ -573,5 +583,52 @@ public:
     }
     PostorderIterConst postIterConst() {
         return PostorderIterConst(*this);
+    }
+};
+
+template <std::totally_ordered T>
+class SearchBinaryTree : public BinaryTree<T> {
+public:
+    using iterator = BinaryTree<T>::iterator;
+    iterator insertLeft(const iterator &itr, const T &val) override final { throw "NotImplemented"; }
+    iterator insertRight(const iterator &itr, const T &val) override final { throw "NotImplemented"; }
+    iterator insert(const T &val) {
+        if (this->root->data == T()) {
+            this->root->data = val;
+            return this->root_node();
+        }
+        auto now = this->root;
+        while (true) {
+            if (val < now->data) {
+                if (now->left == nullptr) {
+                    now->left = new typename BinaryTree<T>::TreeNode(val);
+                    now->left->parent = now;
+                    return iterator(now->left, this);
+                }
+                now = now->left;
+            } else if (val > now->data) {
+                if (now->right == nullptr) {
+                    now->right = new typename BinaryTree<T>::TreeNode(val);
+                    now->right->parent = now;
+                    return iterator(now->right, this);
+                }
+                now = now->right;
+            } else {
+                return iterator(now, this);
+            }
+        }
+    }
+    iterator search(const T &val) {
+        auto now = this->root;
+        while (now != nullptr) {
+            if (val < now->data) {
+                now = now->left;
+            } else if (val > now->data) {
+                now = now->right;
+            } else {
+                return iterator(now, this);
+            }
+        }
+        return iterator(nullptr, this);
     }
 };
