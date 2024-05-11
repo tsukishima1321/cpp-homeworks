@@ -61,11 +61,11 @@ int main() {
     tree.insertLeft(it, '6');
     tree.insertRight(it, '7');
 
-    //std::cout << "Tree height: " << tree.height() << std::endl;
-    //std::cout << "Tree size: " << tree.size() << std::endl;
+    // std::cout << "Tree height: " << tree.height() << std::endl;
+    // std::cout << "Tree size: " << tree.size() << std::endl;
 
     std::cout << std::endl;
-    //printTree<char>(tree.root_node());
+    // printTree<char>(tree.root_node());
 
     using SearchTree = SearchBinaryTree<int>;
     /*SearchTree stree;
@@ -93,37 +93,41 @@ int main() {
 
     AVLTree<int> avl;
     avl.insert(5);
-    std::cout<<"Insert 5"<<std::endl;
+    std::cout << "Insert 5" << std::endl;
     printTree<int>(avl.root_node());
-    std::cout<<std::endl;
+    std::cout << std::endl;
     avl.insert(2);
-    std::cout<<"Insert 2"<<std::endl;
+    std::cout << "Insert 2" << std::endl;
     printTree<int>(avl.root_node());
-    std::cout<<std::endl;
+    std::cout << std::endl;
     avl.insert(3);
-    std::cout<<"Insert 3"<<std::endl;
+    std::cout << "Insert 3" << std::endl;
     printTree<int>(avl.root_node());
-    std::cout<<std::endl;
+    std::cout << std::endl;
     avl.insert(4);
-    std::cout<<"Insert 4"<<std::endl;
+    std::cout << "Insert 4" << std::endl;
     printTree<int>(avl.root_node());
-    std::cout<<std::endl;
+    std::cout << std::endl;
     avl.insert(1);
-    std::cout<<"Insert 1"<<std::endl;
+    std::cout << "Insert 1" << std::endl;
     printTree<int>(avl.root_node());
-    std::cout<<std::endl;
+    std::cout << std::endl;
     avl.insert(6);
-    std::cout<<"Insert 6"<<std::endl;
+    std::cout << "Insert 6" << std::endl;
     printTree<int>(avl.root_node());
-    std::cout<<std::endl;
+    std::cout << std::endl;
     avl.insert(7);
-    std::cout<<"Insert 7"<<std::endl;
+    std::cout << "Insert 7" << std::endl;
     printTree<int>(avl.root_node());
-    std::cout<<std::endl;
+    std::cout << std::endl;
     avl.erase(5);
-    std::cout<<"Erase 5"<<std::endl;
+    std::cout << "Erase 5" << std::endl;
     printTree<int>(avl.root_node());
-    std::cout<<std::endl;
+    std::cout << std::endl;
+    avl.erase(2);
+    std::cout << "Erase 2" << std::endl;
+    printTree<int>(avl.root_node());
+    std::cout << std::endl;
     preOrderPrint(avl);
     inOrderPrint(avl);
 

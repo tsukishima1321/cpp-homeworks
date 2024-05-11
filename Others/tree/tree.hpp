@@ -496,8 +496,7 @@ public:
             friend class TreeIter;
 
         public:
-            iterator(const _TreeNode *root, const _Tree *tree) : _Iterator(root, tree), reachEnd(false) {
-            }
+            iterator(const _TreeNode *root, const _Tree *tree) : _Iterator(root, tree), reachEnd(false) {}
             iterator &operator++() {
                 this->next();
                 if (reachEnd) {
@@ -754,7 +753,10 @@ protected:
     }
 };
 
-template <std::totally_ordered T>
+template <typename T>
+concept copy_and_compare = std::copy_constructible<T> &&std::totally_ordered<T>;
+
+template <copy_and_compare T>
 class AVLTree : public SearchBinaryTree<T> {
 public:
     using SearchBinaryTree<T>::SearchBinaryTree;
@@ -790,8 +792,12 @@ public:
         if (itr.now == nullptr) {
             return false;
         }
+        auto exist = search(*itr);
+        if (!exist) {
+            return false;
+        }
         _Node *now = this->root;
-        now = _delete_recursive((AVLNode *)now, *itr);
+        now = _delete_recursive((AVLNode *)now, T(*itr));
         return true;
     }
     virtual bool erase(const T &val) override {
@@ -799,7 +805,9 @@ public:
         if (!it) {
             return false;
         }
-        return erase(it);
+        _Node *now = this->root;
+        now = _delete_recursive((AVLNode *)now, val);
+        return true;
     }
 
 protected:
@@ -827,7 +835,7 @@ protected:
         _update_height(node);
         return _maintain(node);
     }
-    AVLNode *_delete_recursive(AVLNode *node, const T val) {
+    AVLNode *_delete_recursive(AVLNode *node, const T &val) {
         if (node == nullptr) {
             return nullptr;
         }
@@ -848,7 +856,7 @@ protected:
             }
             if (node->left == nullptr) {
                 AVLNode *right = (AVLNode *)node->right;
-                node->right = nullptr; 
+                node->right = nullptr;
                 delete node;
                 return right;
             }
