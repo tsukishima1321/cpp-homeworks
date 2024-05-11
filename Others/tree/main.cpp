@@ -5,6 +5,8 @@
 #include <iostream>
 #include <string>
 
+using namespace BinaryTrees;
+
 template <typename T>
 void preOrderPrint(const BinaryTree<T> &tree) {
     std::cout << "Preorder traversal: ";
@@ -32,16 +34,7 @@ void postOrderPrint(const BinaryTree<T> &tree) {
     std::cout << std::endl;
 }
 
-template <typename T>
-void printTree(typename BinaryTree<T>::iterator node, const std::string &prefix = "", bool isLeft = true) {
-    if (node) {
-        std::cout << prefix;
-        std::cout << (isLeft ? "├── " : "└── ");
-        std::cout << *node << std::endl;
-        printTree<T>(node.left(), prefix + (isLeft ? "│   " : "    "), true);
-        printTree<T>(node.right(), prefix + (isLeft ? "│   " : "    "), false);
-    }
-}
+
 
 int main() {
 #ifdef _WIN32
