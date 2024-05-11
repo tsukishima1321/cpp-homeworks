@@ -259,10 +259,18 @@ protected:
         _Iterator(const TreeNode *root, const BinaryTree *fromTree) noexcept : fromTree(fromTree) {
             now = const_cast<TreeNode *>(root);
         }
-
         _Iterator(const _FreeIterator<const _Val> &itr) noexcept : fromTree(itr.fromTree) {
             now = const_cast<TreeNode *>(itr.now);
         }
+        _Iterator(const _Iterator &itr) noexcept : fromTree(itr.fromTree) {
+            now = itr.now;
+        }
+        _Iterator(_Iterator &&itr) noexcept : fromTree(itr.fromTree) {
+            now = itr.now;
+            itr.now = nullptr;
+        }
+
+        ~_Iterator() = default;
 
         operator bool() const {
             return now != nullptr;
@@ -317,9 +325,7 @@ protected:
     using postorder_const_iterator = _Iterator<const T, POSTORDER>;
 
 public:
-    BinaryTree() {
-        root = new TreeNode;
-    }
+    BinaryTree() : root(nullptr) {}
     BinaryTree(const T &val) {
         root = new TreeNode;
         root->data = val;
@@ -393,7 +399,7 @@ public:
         return postorder_const_iterator(itr.now, this);
     }
 
-    virtual iterator insertLeft(const iterator &itr, const T &val) {
+    iterator insertLeft(const iterator &itr, const T &val) {
         if (itr.fromTree != this)
             throw "NotFromThisTree";
         if (itr.now->left != nullptr)
@@ -402,7 +408,7 @@ public:
         itr.now->left->parent = itr.now;
         return iterator(itr.now->left, this);
     }
-    virtual iterator insertRight(const iterator &itr, const T &val) {
+    iterator insertRight(const iterator &itr, const T &val) {
         if (itr.fromTree != this)
             throw "NotFromThisTree";
         if (itr.now->right != nullptr)
@@ -410,6 +416,22 @@ public:
         itr.now->right = new TreeNode(val);
         itr.now->right->parent = itr.now;
         return iterator(itr.now->right, this);
+    }
+
+    virtual iterator insert(const iterator &itr, const T &val) {
+        if (itr.fromTree != this)
+            throw "NotFromThisTree";
+        if (itr.now->left == nullptr) {
+            itr.now->left = new TreeNode(val);
+            itr.now->left->parent = itr.now;
+            return iterator(itr.now->left, this);
+        }
+        if (itr.now->right == nullptr) {
+            itr.now->right = new TreeNode(val);
+            itr.now->right->parent = itr.now;
+            return iterator(itr.now->right, this);
+        }
+        throw "AlreadyHasTwoChildren";
     }
 
     void clear(TreeNode *node) {
@@ -503,26 +525,25 @@ public:
 
     public:
         TreeIter(const _Tree &tree) : _tree(tree), _begin(tree.root_node().now, &tree), _end(nullptr, &tree), _front_of_end(tree.root_node()) {
+            auto begin = tree.root_node();
             if constexpr (_order == PREORDER) {
-                while (_front_of_end.hasRight()) {
-                    _front_of_end.moveRight();
-                }
-                while (_front_of_end.hasLeft()) {
-                    _front_of_end.moveLeft();
+                while (_front_of_end.hasRight() || _front_of_end.hasLeft()) {
+                    if (_front_of_end.hasRight()) {
+                        _front_of_end.moveRight();
+                    } else {
+                        _front_of_end.moveLeft();
+                    }
                 }
             }
             if constexpr (_order == INORDER) {
-                auto begin = tree.root_node();
                 while (begin.hasLeft()) {
                     begin.moveLeft();
                 }
-                _begin.now = begin.now;
                 while (_front_of_end.hasRight()) {
                     _front_of_end.moveRight();
                 }
             }
             if constexpr (_order == POSTORDER) {
-                auto begin = tree.root_node();
                 while (begin.hasLeft() || begin.hasRight()) {
                     while (begin.hasLeft()) {
                         begin.moveLeft();
@@ -531,9 +552,9 @@ public:
                         begin.moveRight();
                     }
                 }
-                _begin.now = begin.now;
                 _front_of_end = tree.root_node();
             }
+            _begin.now = begin.now;
             _begin._front_of_end = &_front_of_end;
         }
         iterator begin() {
@@ -589,32 +610,50 @@ public:
 template <std::totally_ordered T>
 class SearchBinaryTree : public BinaryTree<T> {
 public:
-    using iterator = BinaryTree<T>::iterator;
-    iterator insertLeft(const iterator &itr, const T &val) override final { throw "NotImplemented"; }
-    iterator insertRight(const iterator &itr, const T &val) override final { throw "NotImplemented"; }
-    iterator insert(const T &val) {
-        if (this->root->data == T()) {
-            this->root->data = val;
-            return this->root_node();
+    using BinaryTree<T>::BinaryTree;
+    using _Iterator = BinaryTree<T>::iterator;
+    using _Node = BinaryTree<T>::TreeNode;
+    class iterator : public _Iterator {
+        friend class SearchBinaryTree;
+        using _Iterator::_Iterator;
+
+    public:
+        iterator(_Iterator &itr) : _Iterator(itr) {}
+        iterator(_Iterator &&itr) : _Iterator(itr) {}
+        const T *operator->() {
+            return &this->now->data;
+        }
+        const T &operator*() {
+            return this->now->data;
+        }
+    };
+    iterator insertLeft(const iterator &itr, const T &val) { throw "NotImplemented"; }
+    iterator insertRight(const iterator &itr, const T &val) { throw "NotImplemented"; }
+    iterator eraseSubTree(iterator &itr) = delete;
+    iterator eraseSubTree(iterator &&itr) = delete;
+    virtual bool insert(const T &val) {
+        if (this->root == nullptr) {
+            this->root = new _Node(val);
+            return true;
         }
         auto now = this->root;
         while (true) {
             if (val < now->data) {
                 if (now->left == nullptr) {
-                    now->left = new typename BinaryTree<T>::TreeNode(val);
+                    now->left = new _Node(val);
                     now->left->parent = now;
-                    return iterator(now->left, this);
+                    return true;
                 }
                 now = now->left;
             } else if (val > now->data) {
                 if (now->right == nullptr) {
-                    now->right = new typename BinaryTree<T>::TreeNode(val);
+                    now->right = new _Node(val);
                     now->right->parent = now;
-                    return iterator(now->right, this);
+                    return true;
                 }
                 now = now->right;
             } else {
-                return iterator(now, this);
+                return false;
             }
         }
     }
@@ -630,5 +669,183 @@ public:
             }
         }
         return iterator(nullptr, this);
+    }
+    virtual bool erase(iterator &itr) {
+        if (itr.fromTree != this)
+            throw "NotFromThisTree";
+        if (itr.now->left == nullptr && itr.now->right == nullptr) {
+            if (!itr.hasParent()) {
+                this->root = nullptr;
+                delete itr.now;
+                return true;
+            }
+            if (itr.now->parent->left == itr.now) {
+                itr.now->parent->left = nullptr;
+            } else {
+                itr.now->parent->right = nullptr;
+            }
+            auto parent = itr.parent();
+            delete itr.now;
+            return true;
+        }
+        if (itr.now->left == nullptr) {
+            if (!itr.hasParent()) {
+                itr.now->right->parent = nullptr;
+                this->root = itr.now->right;
+                itr.now->right = nullptr;
+                delete itr.now;
+                return true;
+            }
+            if (itr.now->parent->left == itr.now) {
+                itr.now->parent->left = itr.now->right;
+            } else {
+                itr.now->parent->right = itr.now->right;
+            }
+            itr.now->right->parent = itr.now->parent;
+            itr.now->right = nullptr;
+            delete itr.now;
+            return true;
+        }
+        if (itr.now->right == nullptr) {
+            if (!itr.hasParent()) {
+                itr.now->left->parent = nullptr;
+                this->root = itr.now->left;
+                itr.now->left = nullptr;
+                delete itr.now;
+                return true;
+            }
+            if (itr.now->parent->left == itr.now) {
+                itr.now->parent->left = itr.now->left;
+            } else {
+                itr.now->parent->right = itr.now->left;
+            }
+            itr.now->left->parent = itr.now->parent;
+            itr.now->left = nullptr;
+            delete itr.now;
+            return true;
+        }
+        iterator next = this->_find_min_in_right(itr.right());
+        itr.now->data = next.now->data;
+        erase(next);
+        return itr.parent();
+    }
+    virtual bool erase(const T &val) {
+        auto itr = search(val);
+        if (itr) {
+            return erase(itr);
+        }
+        return false;
+    }
+
+protected:
+    static iterator _find_min_in_right(iterator itr) {
+        while (itr.hasLeft()) {
+            itr.moveLeft();
+        }
+        return itr;
+    }
+};
+
+template <std::totally_ordered T>
+class AVLTree : public SearchBinaryTree<T> {
+public:
+    using SearchBinaryTree<T>::SearchBinaryTree;
+    using SearchBinaryTree<T>::search;
+    using _Node = SearchBinaryTree<T>::TreeNode;
+    using _Iterator = SearchBinaryTree<T>::iterator;
+    using iterator = _Iterator;
+    class AVLNode : public _Node {
+        using _Node::_Node;
+
+    public:
+        int depth;
+        AVLNode() : _Node(), depth(1) {}
+        AVLNode(const T &val) : _Node(val), depth(1) {}
+    };
+    virtual bool insert(const T &val) {
+        auto it = search(val);
+        if (it) {
+            return false;
+        }
+        if (this->root == nullptr) {
+            this->root = new AVLNode(val);
+            return iterator(this->root, this);
+        }
+        _Node *now = this->root;
+        now = _insert_recursive((AVLNode *)now, val);
+        return true;
+    }
+
+protected:
+    std::size_t _height(AVLNode *node) {
+        return node ? node->depth : 0;
+    }
+    void _update_height(AVLNode *node) {
+        if (node) {
+            node->depth = BinaryTree<T>::max(_height((AVLNode *)node->left), _height((AVLNode *)node->right)) + 1;
+        }
+    }
+    AVLNode *_insert_recursive(AVLNode *node, const T &val) {
+        if (node == nullptr) {
+            return new AVLNode(val);
+        }
+        if (val < node->data) {
+            node->left = _insert_recursive((AVLNode *)node->left, val);
+            node->left->parent = node;
+        } else if (val > node->data) {
+            node->right = _insert_recursive((AVLNode *)node->right, val);
+            node->right->parent = node;
+        } else {
+            return node;
+        }
+        _update_height(node);
+        return _maintain(node);
+    }
+    AVLNode *_rotate_left(AVLNode *node) {
+        AVLNode *right = (AVLNode *)node->right;
+        node->right = right->left;
+        if (right->left) {
+            right->left->parent = node;
+        }
+        right->left = node;
+        right->parent = node->parent;
+        node->parent = right;
+        _update_height(node);
+        _update_height(right);
+        return right;
+    }
+    AVLNode *_rotate_right(AVLNode *node) {
+        AVLNode *left = (AVLNode *)node->left;
+        node->left = left->right;
+        if (left->right) {
+            left->right->parent = node;
+        }
+        left->right = node;
+        left->parent = node->parent;
+        node->parent = left;
+        _update_height(node);
+        _update_height(left);
+        return left;
+    }
+    AVLNode *_maintain(AVLNode *node) {
+        if (node == nullptr) {
+            return nullptr;
+        }
+        if (_height((AVLNode *)node->left) - _height((AVLNode *)node->right) == 2) {
+            if (_height((AVLNode *)node->left->left) > _height((AVLNode *)node->left->right)) {
+                node = _rotate_right(node);
+            } else {
+                node->left = _rotate_left((AVLNode *)node->left);
+                node = _rotate_right(node);
+            }
+        } else if (_height((AVLNode *)node->right) - _height((AVLNode *)node->left) == 2) {
+            if (_height((AVLNode *)node->right->right) > _height((AVLNode *)node->right->left)) {
+                node = _rotate_left(node);
+            } else {
+                node->right = _rotate_right((AVLNode *)node->right);
+                node = _rotate_left(node);
+            }
+        }
+        return node;
     }
 };
