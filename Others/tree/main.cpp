@@ -1,7 +1,9 @@
 //
 //
 #include "tree.hpp"
+#include <iomanip>
 #include <iostream>
+#include <string>
 
 template <typename T>
 void preOrderPrint(const BinaryTree<T> &tree) {
@@ -30,14 +32,25 @@ void postOrderPrint(const BinaryTree<T> &tree) {
     std::cout << std::endl;
 }
 
+template <typename T>
+void printTree(typename BinaryTree<T>::iterator node, const std::string &prefix = "", bool isLeft = true) {
+    if (node) {
+        std::cout << prefix;
+        std::cout << (isLeft ? "├── " : "└── ");
+        std::cout << *node << std::endl;
+        printTree<T>(node.left(), prefix + (isLeft ? "│   " : "    "), true);
+        printTree<T>(node.right(), prefix + (isLeft ? "│   " : "    "), false);
+    }
+}
+
 int main() {
 #ifdef _WIN32
     system("chcp 65001");
 #endif
     using Tree = BinaryTree<char>;
-    /*Tree tree;
+    Tree tree;
     auto it = tree.root_node();
-    *it = '1';
+    it = tree.insert(it, '1');
     tree.insertLeft(it, '2');
     tree.insertRight(it, '3');
     it.moveLeft();
@@ -48,20 +61,11 @@ int main() {
     tree.insertLeft(it, '6');
     tree.insertRight(it, '7');
 
-    std::cout << "Tree height: " << tree.height() << std::endl;
-    std::cout << "Tree size: " << tree.size() << std::endl;
+    //std::cout << "Tree height: " << tree.height() << std::endl;
+    //std::cout << "Tree size: " << tree.size() << std::endl;
 
     std::cout << std::endl;
-
-    preOrderPrint(tree);
-    inOrderPrint(tree);
-
-    const Tree &ctree = tree;
-    PostOrderPrint(ctree);
-
-    tree.eraseSubTree(tree.root_node().right());
-
-    inOrderPrint(tree);*/
+    //printTree<char>(tree.root_node());
 
     using SearchTree = SearchBinaryTree<int>;
     /*SearchTree stree;
@@ -89,12 +93,37 @@ int main() {
 
     AVLTree<int> avl;
     avl.insert(5);
+    std::cout<<"Insert 5"<<std::endl;
+    printTree<int>(avl.root_node());
+    std::cout<<std::endl;
     avl.insert(2);
+    std::cout<<"Insert 2"<<std::endl;
+    printTree<int>(avl.root_node());
+    std::cout<<std::endl;
     avl.insert(3);
+    std::cout<<"Insert 3"<<std::endl;
+    printTree<int>(avl.root_node());
+    std::cout<<std::endl;
     avl.insert(4);
+    std::cout<<"Insert 4"<<std::endl;
+    printTree<int>(avl.root_node());
+    std::cout<<std::endl;
     avl.insert(1);
+    std::cout<<"Insert 1"<<std::endl;
+    printTree<int>(avl.root_node());
+    std::cout<<std::endl;
     avl.insert(6);
+    std::cout<<"Insert 6"<<std::endl;
+    printTree<int>(avl.root_node());
+    std::cout<<std::endl;
     avl.insert(7);
+    std::cout<<"Insert 7"<<std::endl;
+    printTree<int>(avl.root_node());
+    std::cout<<std::endl;
+    avl.erase(5);
+    std::cout<<"Erase 5"<<std::endl;
+    printTree<int>(avl.root_node());
+    std::cout<<std::endl;
     preOrderPrint(avl);
     inOrderPrint(avl);
 
