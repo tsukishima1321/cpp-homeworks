@@ -1,4 +1,5 @@
 #include <concepts>
+#include <cmath>
 
 template <typename T>
 class BinaryTree {
@@ -762,7 +763,7 @@ public:
         AVLNode() : _Node(), depth(1) {}
         AVLNode(const T &val) : _Node(val), depth(1) {}
     };
-    virtual bool insert(const T &val) {
+    virtual bool insert(const T &val) override {
         auto it = search(val);
         if (it) {
             return false;
@@ -799,7 +800,8 @@ protected:
             return node;
         }
         _update_height(node);
-        return _maintain(node);
+        // return _maintain(node);
+        return node;
     }
     AVLNode *_rotate_left(AVLNode *node) {
         AVLNode *right = (AVLNode *)node->right;
@@ -831,19 +833,27 @@ protected:
         if (node == nullptr) {
             return nullptr;
         }
-        if (_height((AVLNode *)node->left) - _height((AVLNode *)node->right) == 2) {
-            if (_height((AVLNode *)node->left->left) > _height((AVLNode *)node->left->right)) {
-                node = _rotate_right(node);
+        int leftHeight = _height((AVLNode *)node->left);
+        int rightHeight = _height((AVLNode *)node->right);
+        if (std::abs(leftHeight - rightHeight) > 1) {
+            if (leftHeight > rightHeight) {
+                int leftLeftHeight = _height((AVLNode *)node->left->left);
+                int leftRightHeight = _height((AVLNode *)node->left->right);
+                if (leftLeftHeight >= leftRightHeight) {
+                    node = _rotate_right(node);
+                } else {
+                    node->_left = _rotate_left((AVLNode *)node->left);
+                    node = _rotate_right(node);
+                }
             } else {
-                node->left = _rotate_left((AVLNode *)node->left);
-                node = _rotate_right(node);
-            }
-        } else if (_height((AVLNode *)node->right) - _height((AVLNode *)node->left) == 2) {
-            if (_height((AVLNode *)node->right->right) > _height((AVLNode *)node->right->left)) {
-                node = _rotate_left(node);
-            } else {
-                node->right = _rotate_right((AVLNode *)node->right);
-                node = _rotate_left(node);
+                int rightLeftHeight = _height((AVLNode *)node->right->left);
+                int rightRightHeight = _height((AVLNode *)node->right->right);
+                if (rightRightHeight >= rightLeftHeight) {
+                    node = _rotate_left(node);
+                } else {
+                    node->right = _rotate_right((AVLNode *)node->right);
+                    node = _rotate_left(node);
+                }
             }
         }
         return node;
