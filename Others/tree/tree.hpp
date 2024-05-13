@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cmath>
 #include <concepts>
 #include <iostream>
@@ -35,6 +37,37 @@ namespace BinaryTrees {
         };
 
         TreeNode *root;
+
+        static void _clear(TreeNode *node) {
+            if (node == nullptr) {
+                return;
+            }
+            if (node->left != nullptr) {
+                delete node->left;
+            }
+            if (node->right != nullptr) {
+                delete node->right;
+            }
+        }
+
+        static void _copy(TreeNode *node, TreeNode *from) {
+            if (node == from) {
+                return;
+            }
+            if (node == nullptr || from == nullptr) {
+                return;
+            }
+            if (from->left != nullptr) {
+                node->left = new TreeNode(from->left->data);
+                node->left->parent = node;
+                _copy(node->left, from->left);
+            }
+            if (from->right != nullptr) {
+                node->right = new TreeNode(from->right->data);
+                node->right->parent = node;
+                _copy(node->right, from->right);
+            }
+        }
 
         enum Order_t {
             PREORDER = -1,
@@ -320,18 +353,53 @@ namespace BinaryTrees {
         };
 
     public:
-        using iterator = _FreeIterator<T>;
-        using const_iterator = _FreeIterator<const T>;
-        using preorder_iterator = _Iterator<T, PREORDER>;
-        using preorder_const_iterator = _Iterator<const T, PREORDER>;
-        using inorder_iterator = _Iterator<T, INORDER>;
-        using inorder_const_iterator = _Iterator<const T, INORDER>;
-        using postorder_iterator = _Iterator<T, POSTORDER>;
-        using postorder_const_iterator = _Iterator<const T, POSTORDER>;
         BinaryTree() : root(nullptr) {}
         BinaryTree(const T &val) {
             root = new TreeNode;
             root->data = val;
+        }
+        BinaryTree(BinaryTree &&tree) noexcept : root(tree.root) {
+            tree.root = nullptr;
+        }
+        BinaryTree(const BinaryTree &tree) {
+            if (tree.root != nullptr) {
+                root = new TreeNode(tree.root->data);
+                _copy(root, tree.root);
+            }
+        }
+        BinaryTree &operator=(const BinaryTree &tree) {
+            if (this == &tree) {
+                return *this;
+            }
+            if (root != nullptr) {
+                delete root;
+                root = nullptr;
+            }
+            if (tree.root != nullptr) {
+                root = new TreeNode(tree.root->data);
+                _copy(root, tree.root);
+            }
+            return *this;
+        }
+        BinaryTree &operator=(BinaryTree &&tree) noexcept {
+            if (this == &tree) {
+                return *this;
+            }
+            if (root != nullptr) {
+                delete root;
+                root = nullptr;
+            }
+            root = tree.root;
+            tree.root = nullptr;
+            return *this;
+        }
+        BinaryTree copy() const {
+            BinaryTree newTree;
+            if (root != nullptr) {
+                newTree.root = new TreeNode(root->data);
+                _copy(newTree.root, root);
+            }
+            return newTree;
         }
         ~BinaryTree() {
             if (root != nullptr) {
@@ -345,6 +413,15 @@ namespace BinaryTrees {
         std::size_t size() const {
             return root->size();
         }
+
+        using iterator = _FreeIterator<T>;
+        using const_iterator = _FreeIterator<const T>;
+        using preorder_iterator = _Iterator<T, PREORDER>;
+        using preorder_const_iterator = _Iterator<const T, PREORDER>;
+        using inorder_iterator = _Iterator<T, INORDER>;
+        using inorder_const_iterator = _Iterator<const T, INORDER>;
+        using postorder_iterator = _Iterator<T, POSTORDER>;
+        using postorder_const_iterator = _Iterator<const T, POSTORDER>;
 
         iterator root_node() {
             return iterator(root, this);
@@ -439,19 +516,6 @@ namespace BinaryTrees {
                 return iterator(itr.now->right, this);
             }
             throw "AlreadyHasTwoChildren";
-        }
-
-        void clear(TreeNode *node) {
-            if (node == nullptr) {
-                return;
-            }
-            if (node->left != nullptr) {
-                delete node->left;
-            }
-            if (node->right != nullptr) {
-                delete node->right;
-            }
-            return;
         }
 
         iterator eraseSubTree(iterator &itr) {
@@ -617,6 +681,8 @@ namespace BinaryTrees {
     class SearchBinaryTree : public BinaryTree<T> {
     public:
         using BinaryTree<T>::BinaryTree;
+        using BinaryTree<T>::operator=;
+        using BinaryTree<T>::copy;
         using _Iterator = BinaryTree<T>::iterator;
         using _Node = BinaryTree<T>::TreeNode;
         class iterator : public _Iterator {
@@ -765,6 +831,8 @@ namespace BinaryTrees {
         using SearchBinaryTree<T>::SearchBinaryTree;
         using SearchBinaryTree<T>::search;
         using SearchBinaryTree<T>::_find_min_in_right;
+        using BinaryTree<T>::operator=;
+        using BinaryTree<T>::copy;
         using _Node = SearchBinaryTree<T>::TreeNode;
         using _Iterator = SearchBinaryTree<T>::iterator;
         using iterator = _Iterator;
@@ -948,11 +1016,11 @@ namespace BinaryTrees {
     };
 
     template <StreamInsertable T>
-    void printTree(typename BinaryTree<T>::iterator node, const std::string &prefix = "", bool isLeft = true) {
+    void printTree(typename BinaryTree<T>::iterator node, const std::string &prefix = "", bool isLeft = true, std::ostream &os = std::cout) {
         if (node) {
-            std::cout << prefix;
-            std::cout << (isLeft ? "├── " : "└── ");
-            std::cout << *node << std::endl;
+            os << prefix;
+            os << (isLeft ? "├── " : "└── ");
+            os << *node << std::endl;
             printTree<T>(node.left(), prefix + (isLeft ? "│   " : "    "), true);
             printTree<T>(node.right(), prefix + (isLeft ? "│   " : "    "), false);
         }

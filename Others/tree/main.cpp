@@ -41,18 +41,24 @@ int main() {
     system("chcp 65001");
 #endif
     using Tree = BinaryTree<char>;
-    Tree tree;
-    auto it = tree.root_node();
-    it = tree.insert(it, '1');
-    tree.insertLeft(it, '2');
-    tree.insertRight(it, '3');
+    Tree* tree = new Tree;
+    auto it = tree->root_node();
+    it = tree->insert(it, '1');
+    tree->insertLeft(it, '2');
+    tree->insertRight(it, '3');
     it.moveLeft();
-    tree.insertLeft(it, '4');
-    tree.insertRight(it, '5');
+    tree->insertLeft(it, '4');
+    tree->insertRight(it, '5');
     it.moveParent();
     it.moveRight();
-    tree.insertLeft(it, '6');
-    tree.insertRight(it, '7');
+    tree->insertLeft(it, '6');
+    tree->insertRight(it, '7');
+
+    Tree tree2 = tree->copy();
+
+    delete tree;
+
+    printTree<char>(tree2.root_node());
 
     // std::cout << "Tree height: " << tree.height() << std::endl;
     // std::cout << "Tree size: " << tree.size() << std::endl;
@@ -61,6 +67,16 @@ int main() {
     // printTree<char>(tree.root_node());
 
     using SearchTree = SearchBinaryTree<int>;
+    SearchTree* stree = new SearchTree;
+    stree->insert(5);
+    stree->insert(2);
+    stree->insert(4);
+    stree->insert(3);
+    
+    SearchTree stree2 = std::move(*stree);
+    delete stree;
+    printTree<int>(stree2.root_node());
+    
     /*SearchTree stree;
     stree.insert(5);
     stree.insert(2);
