@@ -11,7 +11,7 @@ int sum(int a[], int n) {
     if (n == 1) {
         return a[0];
     }
-    return a[0] + sum(a + 1, n - 1);
+    return a[0] + sum(a + 1, n - 1); // 传递数组的首指针和长度，所以(a + 1, n - 1)就相当于数组去掉第一个数后的新数组
 }
 
 int main() {
