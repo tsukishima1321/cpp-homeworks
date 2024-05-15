@@ -129,16 +129,18 @@ int main() {
     std::cout << "Insert 7" << std::endl;
     printTree<int>(avl.root_node());
     std::cout << std::endl;
-    avl.erase(5);
-    std::cout << "Erase 5" << std::endl;
-    printTree<int>(avl.root_node());
-    std::cout << std::endl;
-    avl.erase(2);
-    std::cout << "Erase 2" << std::endl;
-    printTree<int>(avl.root_node());
-    std::cout << std::endl;
     preOrderPrint(avl);
     inOrderPrint(avl);
+
+    auto r = avl.search(5);
+    if (r) {
+        std::cout << "Found: " << *r << std::endl;
+        //*r = 9; // Error:不应该通过迭代器修改搜索树的值
+        avl.erase(r);
+        printTree<int>(avl.root_node());
+    } else {
+        std::cout << "Not found" << std::endl;
+    }
 
     system("pause");
     return 0;

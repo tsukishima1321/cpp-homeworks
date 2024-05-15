@@ -10,21 +10,22 @@ namespace BinaryTrees {
     template <typename T>
     class BinaryTree {
     protected:
-        class TreeNode {
+        template <typename _Val>
+        class _Node {
         public:
-            T data;
-            TreeNode *left;
-            TreeNode *right;
-            TreeNode *parent;
+            _Val data;
+            _Node *left;
+            _Node *right;
+            _Node *parent;
             std::size_t height() {
                 return std::max(left ? left->height() : 0, right ? right->height() : 0) + 1;
             }
             std::size_t size() {
                 return (left ? left->size() : 0) + (right ? right->size() : 0) + 1;
             }
-            TreeNode() : left(nullptr), right(nullptr), parent(nullptr), data() {}
-            TreeNode(const T &val) : data(val), left(nullptr), right(nullptr), parent(nullptr) {}
-            ~TreeNode() {
+            _Node() : left(nullptr), right(nullptr), parent(nullptr), data() {}
+            _Node(const _Val &val) : data(val), left(nullptr), right(nullptr), parent(nullptr) {}
+            ~_Node() {
                 if (left != nullptr) {
                     delete left;
                     left = nullptr;
@@ -35,6 +36,8 @@ namespace BinaryTrees {
                 }
             }
         };
+
+        using TreeNode = _Node<T>;
 
         TreeNode *root;
 
@@ -50,7 +53,7 @@ namespace BinaryTrees {
             }
         }
 
-        static void _copy(TreeNode *node, TreeNode *from) {
+        static void _copy(TreeNode *node, const TreeNode *from) {
             if (node == from) {
                 return;
             }
@@ -77,7 +80,7 @@ namespace BinaryTrees {
 
         template <typename _Val>
         class _FreeIterator {
-            using _Self_t = _FreeIterator<_Val>;
+            using _Self = _FreeIterator<_Val>;
             friend class BinaryTree;
 
         protected:
@@ -114,55 +117,55 @@ namespace BinaryTrees {
                 return now->parent != nullptr;
             }
 
-            _Self_t &moveLeft() {
+            _Self &moveLeft() {
                 if (now == nullptr)
                     throw "OutOfRange:NoLeft";
                 now = now->left;
                 return *this;
             }
-            _Self_t &moveRight() {
+            _Self &moveRight() {
                 if (now == nullptr)
                     throw "OutOfRange:NoRight";
                 now = now->right;
                 return *this;
             }
-            _Self_t &moveParent() {
+            _Self &moveParent() {
                 if (now == nullptr)
                     throw "OutOfRange:NoParent";
                 now = now->parent;
                 return *this;
             }
 
-            _Self_t left() {
+            _Self left() {
                 if (now == nullptr) {
                     throw "OutOfRange:NoLeft";
                 }
-                return _Self_t(now->left, fromTree);
+                return _Self(now->left, fromTree);
             }
-            _Self_t right() {
+            _Self right() {
                 if (now == nullptr) {
                     throw "OutOfRange:NoRight";
                 }
-                return _Self_t(now->right, fromTree);
+                return _Self(now->right, fromTree);
             }
-            _Self_t parent() {
+            _Self parent() {
                 if (now == nullptr) {
                     throw "OutOfRange:NoParent";
                 }
-                return _Self_t(now->parent, fromTree);
+                return _Self(now->parent, fromTree);
             }
 
-            bool operator==(const _Self_t &itr) const {
+            bool operator==(const _Self &itr) const {
                 return now == itr.now;
             }
-            bool operator!=(const _Self_t &itr) const {
+            bool operator!=(const _Self &itr) const {
                 return now != itr.now;
             }
         };
 
         template <typename _Val, Order_t _order>
         class _Iterator {
-            using _Self_t = _Iterator<_Val, _order>;
+            using _Self = _Iterator<_Val, _order>;
             friend class BinaryTree;
 
         protected:
@@ -325,29 +328,29 @@ namespace BinaryTrees {
             _Val &operator*() const {
                 return const_cast<_Val &>(now->data);
             }
-            _Self_t &operator++() {
+            _Self &operator++() {
                 next();
                 return *this;
             }
-            _Self_t operator++(int) {
-                _Self_t formal = *this;
+            _Self operator++(int) {
+                _Self formal = *this;
                 next();
                 return formal;
             }
-            _Self_t &operator--() {
+            _Self &operator--() {
                 last();
                 return *this;
             }
-            _Self_t operator--(int) {
-                _Self_t formal = *this;
+            _Self operator--(int) {
+                _Self formal = *this;
                 last();
                 return formal;
             }
 
-            bool operator==(const _Self_t &itr) const {
+            bool operator==(const _Self &itr) const {
                 return now == itr.now;
             }
-            bool operator!=(const _Self_t &itr) const {
+            bool operator!=(const _Self &itr) const {
                 return now != itr.now;
             }
         };
@@ -355,8 +358,7 @@ namespace BinaryTrees {
     public:
         BinaryTree() : root(nullptr) {}
         BinaryTree(const T &val) {
-            root = new TreeNode;
-            root->data = val;
+            root = new TreeNode(val);
         }
         BinaryTree(BinaryTree &&tree) noexcept : root(tree.root) {
             tree.root = nullptr;
@@ -552,7 +554,7 @@ namespace BinaryTrees {
         }
 
         template <Order_t _order, typename _Val>
-        class TreeIter {
+        class _TreeIter {
             using _Tree = BinaryTree;
             using _TreeNode = _Tree::TreeNode;
             using _Iterator = _Iterator<_Val, _order>;
@@ -560,7 +562,7 @@ namespace BinaryTrees {
 
         protected:
             class iterator : public _Iterator {
-                friend class TreeIter;
+                friend class _TreeIter;
 
             public:
                 iterator(const _TreeNode *root, const _Tree *tree) : _Iterator(root, tree), reachEnd(false) {}
@@ -594,7 +596,7 @@ namespace BinaryTrees {
             };
 
         public:
-            TreeIter(const _Tree &tree) : _tree(tree), _begin(tree.root_node().now, &tree), _end(nullptr, &tree), _front_of_end(tree.root_node()) {
+            _TreeIter(const _Tree &tree) : _tree(tree), _begin(tree.root_node().now, &tree), _end(nullptr, &tree), _front_of_end(tree.root_node()) {
                 auto begin = tree.root_node();
                 if constexpr (_order == PREORDER) {
                     while (_front_of_end.hasRight() || _front_of_end.hasLeft()) {
@@ -641,12 +643,12 @@ namespace BinaryTrees {
             _Sentinel _front_of_end;
         };
 
-        using PreorderIter = TreeIter<PREORDER, T>;
-        using InorderIter = TreeIter<INORDER, T>;
-        using PostorderIter = TreeIter<POSTORDER, T>;
-        using PreorderIterConst = TreeIter<PREORDER, const T>;
-        using InorderIterConst = TreeIter<INORDER, const T>;
-        using PostorderIterConst = TreeIter<POSTORDER, const T>;
+        using PreorderIter = _TreeIter<PREORDER, T>;
+        using InorderIter = _TreeIter<INORDER, T>;
+        using PostorderIter = _TreeIter<POSTORDER, T>;
+        using PreorderIterConst = _TreeIter<PREORDER, const T>;
+        using InorderIterConst = _TreeIter<INORDER, const T>;
+        using PostorderIterConst = _TreeIter<POSTORDER, const T>;
 
         PreorderIter preIter() {
             return PreorderIter(*this);
@@ -677,14 +679,20 @@ namespace BinaryTrees {
         }
     };
 
-    template <std::totally_ordered T>
+    template <typename T>
+    void swap(BinaryTree<T> &lhs, BinaryTree<T> &rhs) {
+        std::swap(lhs.root, rhs.root);
+    }
+
+    template <typename T>
+    concept copy_and_compare = std::copy_constructible<T> && std::totally_ordered<T>;
+
+    template <copy_and_compare T>
     class SearchBinaryTree : public BinaryTree<T> {
     public:
         using BinaryTree<T>::BinaryTree;
-        using BinaryTree<T>::operator=;
-        using BinaryTree<T>::copy;
         using _Iterator = BinaryTree<T>::iterator;
-        using _Node = BinaryTree<T>::TreeNode;
+        using TreeNode = BinaryTree<T>::TreeNode;
         class iterator : public _Iterator {
             friend class SearchBinaryTree;
             using _Iterator::_Iterator;
@@ -699,27 +707,27 @@ namespace BinaryTrees {
                 return this->now->data;
             }
         };
-        iterator insertLeft(const iterator &itr, const T &val) { throw "NotImplemented"; }
-        iterator insertRight(const iterator &itr, const T &val) { throw "NotImplemented"; }
+        iterator insertLeft(const iterator &itr, const T &val) = delete;
+        iterator insertRight(const iterator &itr, const T &val) = delete;
         iterator eraseSubTree(iterator &itr) = delete;
         iterator eraseSubTree(iterator &&itr) = delete;
         virtual bool insert(const T &val) {
             if (this->root == nullptr) {
-                this->root = new _Node(val);
+                this->root = new TreeNode(val);
                 return true;
             }
             auto now = this->root;
             while (true) {
                 if (val < now->data) {
                     if (now->left == nullptr) {
-                        now->left = new _Node(val);
+                        now->left = new TreeNode(val);
                         now->left->parent = now;
                         return true;
                     }
                     now = now->left;
                 } else if (val > now->data) {
                     if (now->right == nullptr) {
-                        now->right = new _Node(val);
+                        now->right = new TreeNode(val);
                         now->right->parent = now;
                         return true;
                     }
@@ -822,20 +830,12 @@ namespace BinaryTrees {
         }
     };
 
-    template <typename T>
-    concept copy_and_compare = std::copy_constructible<T> && std::totally_ordered<T>;
-
     template <copy_and_compare T>
     class AVLTree : public SearchBinaryTree<T> {
     public:
         using SearchBinaryTree<T>::SearchBinaryTree;
-        using SearchBinaryTree<T>::search;
-        using SearchBinaryTree<T>::_find_min_in_right;
-        using BinaryTree<T>::operator=;
-        using BinaryTree<T>::copy;
         using _Node = SearchBinaryTree<T>::TreeNode;
-        using _Iterator = SearchBinaryTree<T>::iterator;
-        using iterator = _Iterator;
+        using iterator = SearchBinaryTree<T>::iterator;
         class AVLNode : public _Node {
             using _Node::_Node;
 
@@ -845,7 +845,7 @@ namespace BinaryTrees {
             AVLNode(const T &val) : _Node(val), depth(1) {}
         };
         virtual bool insert(const T &val) override {
-            auto it = search(val);
+            auto it = this->search(val);
             if (it) {
                 return false;
             }
@@ -863,7 +863,7 @@ namespace BinaryTrees {
             if (itr.now == nullptr) {
                 return false;
             }
-            auto exist = search(*itr);
+            auto exist = this->search(*itr);
             if (!exist) {
                 return false;
             }
@@ -872,7 +872,7 @@ namespace BinaryTrees {
             return true;
         }
         virtual bool erase(const T &val) override {
-            auto it = search(val);
+            auto it = this->search(val);
             if (!it) {
                 return false;
             }
@@ -887,7 +887,7 @@ namespace BinaryTrees {
         }
         void _update_height(AVLNode *node) {
             if (node) {
-                node->depth = std::max(_height((AVLNode *)node->left), _height((AVLNode *)node->right)) + 1;
+                node->depth = node->height();
             }
         }
         AVLNode *_insert_recursive(AVLNode *node, const T &val) {
@@ -937,7 +937,7 @@ namespace BinaryTrees {
                     delete node;
                     return left;
                 }
-                AVLNode *next = (AVLNode *)_find_min_in_right(iterator((_Node *)node, this)).now;
+                AVLNode *next = (AVLNode *)this->_find_min_in_right(iterator((_Node *)node, this)).now;
                 std::swap(node->data, next->data);
                 node->right = _delete_recursive((AVLNode *)node->right, val);
                 if (node->right) {

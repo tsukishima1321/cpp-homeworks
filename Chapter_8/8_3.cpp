@@ -7,6 +7,7 @@
 分别编二个函数，学生人数从键盘输入
 ‍*/
 #include <iostream>
+#include <tuple>
 
 using namespace std;
 
@@ -50,6 +51,20 @@ void fun2(int s[], int n, int &x, int &y) {
     }
 }
 
+std::tuple<int, int> fun3(int s[], int n) {
+    int a = 0;
+    int b = 0;
+    ScoreSort(s, n);
+    for (int i = 0; i < n; i++) {
+        if (s[i] >= 90) {
+            a++;
+        } else if (s[i] < 60) {
+            b++;
+        }
+    }
+    return std::make_tuple(a, b);
+}
+
 int main() {
     int n;
     int scores[100] = {};
@@ -57,9 +72,11 @@ int main() {
     for (int i = 0; i < n; i++) {
         cin >> scores[i];
     }
-    int a, b;
-    // a = fun1(scores, n, &b);
-    fun2(scores, n, a, b);
+    //auto [a, b] = fun3(scores, n); // 1. C++17的结构化绑定
+    // int a, b;
+    // std::tie(a, b) = fun3(scores, n);// 2. C++11的std::tie
+    // a = fun1(scores, n, &b);// 3. 传递指针
+    // fun2(scores, n, a, b);// 4. 传递引用
     for (int i = 0; i < n; i++) {
         cout << scores[i] << endl;
     }
