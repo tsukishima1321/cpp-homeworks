@@ -72,7 +72,7 @@ int main() {
     for (int i = 0; i < n; i++) {
         cin >> scores[i];
     }
-    //auto [a, b] = fun3(scores, n); // 1. C++17的结构化绑定
+    auto [a, b] = fun3(scores, n); // 1. C++17的结构化绑定
     // int a, b;
     // std::tie(a, b) = fun3(scores, n);// 2. C++11的std::tie
     // a = fun1(scores, n, &b);// 3. 传递指针
