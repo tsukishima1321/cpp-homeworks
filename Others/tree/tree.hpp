@@ -367,6 +367,8 @@ namespace BinaryTrees {
             if (tree.root != nullptr) {
                 root = new TreeNode(tree.root->data);
                 _copy(root, tree.root);
+            } else {
+                root = nullptr;
             }
         }
         BinaryTree &operator=(const BinaryTree &tree) {
@@ -554,7 +556,7 @@ namespace BinaryTrees {
         }
 
         template <Order_t _order, typename _Val>
-        class _TreeIter {
+        class _TreeView {
             using _Tree = BinaryTree;
             using _TreeNode = _Tree::TreeNode;
             using _Iterator = _Iterator<_Val, _order>;
@@ -562,7 +564,7 @@ namespace BinaryTrees {
 
         protected:
             class iterator : public _Iterator {
-                friend class _TreeIter;
+                friend class _TreeView;
 
             public:
                 iterator(const _TreeNode *root, const _Tree *tree) : _Iterator(root, tree), reachEnd(false) {}
@@ -596,7 +598,7 @@ namespace BinaryTrees {
             };
 
         public:
-            _TreeIter(const _Tree &tree) : _tree(tree), _begin(tree.root_node().now, &tree), _end(nullptr, &tree), _front_of_end(tree.root_node()) {
+            _TreeView(const _Tree &tree) : _tree(tree), _begin(tree.root_node().now, &tree), _end(nullptr, &tree), _front_of_end(tree.root_node()) {
                 auto begin = tree.root_node();
                 if constexpr (_order == PREORDER) {
                     while (_front_of_end.hasRight() || _front_of_end.hasLeft()) {
@@ -643,39 +645,39 @@ namespace BinaryTrees {
             _Sentinel _front_of_end;
         };
 
-        using PreorderIter = _TreeIter<PREORDER, T>;
-        using InorderIter = _TreeIter<INORDER, T>;
-        using PostorderIter = _TreeIter<POSTORDER, T>;
-        using PreorderIterConst = _TreeIter<PREORDER, const T>;
-        using InorderIterConst = _TreeIter<INORDER, const T>;
-        using PostorderIterConst = _TreeIter<POSTORDER, const T>;
+        using PreorderView = _TreeView<PREORDER, T>;
+        using InorderView = _TreeView<INORDER, T>;
+        using PostorderView = _TreeView<POSTORDER, T>;
+        using PreorderViewConst = _TreeView<PREORDER, const T>;
+        using InorderViewConst = _TreeView<INORDER, const T>;
+        using PostorderViewConst = _TreeView<POSTORDER, const T>;
 
-        PreorderIter preIter() {
-            return PreorderIter(*this);
+        PreorderView preView() {
+            return PreorderView(*this);
         }
-        InorderIter inIter() {
-            return InorderIter(*this);
+        InorderView inView() {
+            return InorderView(*this);
         }
-        PostorderIter postIter() {
-            return PostorderIter(*this);
+        PostorderView postView() {
+            return PostorderView(*this);
         }
-        PreorderIterConst preIter() const {
-            return PreorderIterConst(*this);
+        PreorderViewConst preView() const {
+            return PreorderViewConst(*this);
         }
-        InorderIterConst inIter() const {
-            return InorderIterConst(*this);
+        InorderViewConst inView() const {
+            return InorderViewConst(*this);
         }
-        PostorderIterConst postIter() const {
-            return PostorderIterConst(*this);
+        PostorderViewConst postView() const {
+            return PostorderViewConst(*this);
         }
-        PreorderIterConst preIterConst() {
-            return PreorderIterConst(*this);
+        PreorderViewConst preViewConst() {
+            return PreorderViewConst(*this);
         }
-        InorderIterConst inIterConst() {
-            return InorderIterConst(*this);
+        InorderViewConst inViewConst() {
+            return InorderViewConst(*this);
         }
-        PostorderIterConst postIterConst() {
-            return PostorderIterConst(*this);
+        PostorderViewConst postViewConst() {
+            return PostorderViewConst(*this);
         }
     };
 

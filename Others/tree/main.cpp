@@ -10,7 +10,7 @@ using namespace BinaryTrees;
 template <typename T>
 void preOrderPrint(const BinaryTree<T> &tree) {
     std::cout << "Preorder traversal: ";
-    for (auto &i : tree.preIter()) {
+    for (auto &i : tree.preView()) {
         std::cout << i << " ";
     }
     std::cout << std::endl;
@@ -19,7 +19,7 @@ void preOrderPrint(const BinaryTree<T> &tree) {
 template <typename T>
 void inOrderPrint(const BinaryTree<T> &tree) {
     std::cout << "Inorder traversal: ";
-    for (auto &i : tree.inIter()) {
+    for (auto &i : tree.inView()) {
         std::cout << i << " ";
     }
     std::cout << std::endl;
@@ -28,7 +28,7 @@ void inOrderPrint(const BinaryTree<T> &tree) {
 template <typename T>
 void postOrderPrint(const BinaryTree<T> &tree) {
     std::cout << "Postorder traversal: ";
-    for (auto &i : tree.postIter()) {
+    for (auto &i : tree.postView()) {
         std::cout << i << " ";
     }
     std::cout << std::endl;

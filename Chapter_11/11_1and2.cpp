@@ -25,7 +25,9 @@ staff_t deln(node_t *head, int n) {
         p = p->next;
     }
     temp = p->next->data;
+    node_t *q = p->next;
     p->next = p->next->next;
+    delete q;
     return temp;
 }
 
