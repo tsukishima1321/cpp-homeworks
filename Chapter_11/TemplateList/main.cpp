@@ -1,11 +1,11 @@
 //
 //
+#include "LargeNum.h"
 #include "List.hpp"
 #include <iostream>
 
 int main() {
-    MyList::List<int> list{1,2,3,4,5};
-    /*
+    MyList::List<int> list{1, 2, 3, 4, 5};
     list.push_back(1);
     list.push_back(2);
     list.push_back(3);
@@ -18,13 +18,13 @@ int main() {
     for (auto &v : list) {
         v += 1;
         std::cout << v << " ";
-    }*/
-    for (auto &v : list) {
-        v += 1;
-        std::cout << v << " ";
     }
-    int a[10] = {1,2,3,4,5,6,7,8,9,10};
-    MyList::List<int> list2(a, a+10);
+    getchar();
+    MyList::List<LargeNum> list2;
+    LargeNum a(1);
+    list2.push_back(a);
+    list2.push_back(LargeNum(2));
+    list2.push_back(LargeNum(3) + 5);
     for (auto &v : list2) {
         v += 1;
         std::cout << v << " ";
