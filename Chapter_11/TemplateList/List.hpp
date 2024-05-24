@@ -5,12 +5,65 @@ namespace MyList {
     class List {
     public:
         List() : head(nullptr){};
-        ~List(){
+        ~List() {
             Node *p = head, *q;
             while (p != nullptr) {
                 q = p->next;
                 delete p;
                 p = q;
+            }
+        };
+        List(const List &list) : head(nullptr) {
+            Node *p = list.head;
+            while (p != nullptr) {
+                push_back(p->data);
+                p = p->next;
+            }
+        };
+        List(List &&list) {
+            head = list.head;
+            list.head = nullptr;
+        };
+        List &operator=(const List &list) {
+            if (this == &list) {
+                return *this;
+            }
+            Node *p = head, *q;
+            while (p != nullptr) {
+                q = p->next;
+                delete p;
+                p = q;
+            }
+            head = nullptr;
+            p = list.head;
+            while (p != nullptr) {
+                push_back(p->data);
+                p = p->next;
+            }
+            return *this;
+        };
+        List &operator=(List &&list) {
+            if (this == &list) {
+                return *this;
+            }
+            Node *p = head, *q;
+            while (p != nullptr) {
+                q = p->next;
+                delete p;
+                p = q;
+            }
+            head = list.head;
+            list.head = nullptr;
+            return *this;
+        };
+        List(std::initializer_list<T> list) : head(nullptr) {
+            for (auto &i : list) {
+                push_back(i);
+            }
+        };
+        List(T *start, T *end) : head(nullptr) {
+            for (T *i = start; i != end; i++) {
+                push_back(*i);
             }
         };
         void push_back(const T &data) {
@@ -148,7 +201,7 @@ namespace MyList {
             return Iterator(this, std::size_t(0));
         };
         Iterator end() {
-            return Iterator(this, size());
+            return Iterator(this, nullptr);
         };
     };
 }
