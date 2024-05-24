@@ -7,7 +7,6 @@ public:
     char num[6];
     char name[10];
     double wage;
-    Staff();
     static Staff FromStream(std::istream &is = std::cin, std::ostream &os = std::cout);
     void print(std::ostream &os = std::cout) const;
 };

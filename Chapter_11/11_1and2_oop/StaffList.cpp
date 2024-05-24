@@ -1,12 +1,6 @@
 #include "StaffList.h"
 #include <cstring>
 
-Staff::Staff() {
-    num[0] = '\0';
-    name[0] = '\0';
-    wage = 0;
-}
-
 Staff Staff::FromStream(std::istream &is, std::ostream &os) {
     Staff staff;
     os << "Please input the number of staff: ";
