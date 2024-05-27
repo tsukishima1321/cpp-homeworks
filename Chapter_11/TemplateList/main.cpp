@@ -24,7 +24,7 @@ int main() {
     LargeNum a(1);
     list2.push_back(a);
     list2.push_back(LargeNum(2));
-    list2.push_back(LargeNum(3) + 5);
+    list2.push_back(a + 5);
     for (auto &v : list2) {
         v += 1;
         std::cout << v << " ";
