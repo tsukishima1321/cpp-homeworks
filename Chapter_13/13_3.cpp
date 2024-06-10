@@ -18,7 +18,7 @@ public:
     };
     Fraction(int fz) : fz(fz), fm(1){};
 
-    void print(std::ostream &os = std::cout) {
+    void print(std::ostream &os = std::cout) const {
         os << fz << "/" << fm;
     }
 
@@ -32,12 +32,7 @@ public:
         fz /= a;
         fm /= a;
     }
-    friend std::ostream &operator<<(std::ostream &os, Fraction &f) {
-        f.print(os);
-        return os;
-    }
-
-    friend std::ostream &operator<<(std::ostream &os, Fraction &&f) {
+    friend std::ostream &operator<<(std::ostream &os, const Fraction &f) {
         f.print(os);
         return os;
     }
@@ -77,7 +72,7 @@ public:
         return f;
     }
 
-    explicit operator bool() {
+    explicit operator bool() const {
         return fz != 0;
     }
 
@@ -100,7 +95,7 @@ public:
         return a.fz * b.fm <= b.fz * a.fm;
     }
 
-    operator double() {
+    operator double() const {
         return (double)fz / fm;
     }
 };
