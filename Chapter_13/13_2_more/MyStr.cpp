@@ -78,21 +78,6 @@ int Mystring::length() const {
     return length;
 }
 
-void Mystring::cat(const Mystring &s) {
-    int length = capacity + s.capacity;
-    if (length > capacity) {
-        capacity = length;
-        char *temp = new char[capacity + s.capacity + 1];
-        strcpy(temp, str);
-        strcpy(temp + this->length(), s.str);
-        delete[] str;
-        str = temp;
-        capacity = length;
-    } else {
-        strcpy(str + this->length(), s.str);
-    }
-}
-
 bool operator==(const Mystring &a, const Mystring &b) {
     if (a.length() != b.length()) {
         return false;

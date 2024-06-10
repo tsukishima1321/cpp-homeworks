@@ -21,8 +21,6 @@ public:
 
     int length() const;
 
-    void cat(const Mystring &s);
-
     friend bool operator==(const Mystring &a, const Mystring &b);
     friend Mystring operator+(const Mystring &a, const Mystring &b);
 
