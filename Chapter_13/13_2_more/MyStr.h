@@ -4,6 +4,31 @@ class Mystring {
 private:
     char *str;
     int capacity;
+
+public:
+    Mystring();
+    Mystring(const char *s);
+    ~Mystring();
+
+    Mystring(const Mystring &a);
+    Mystring &operator=(const Mystring &a);
+    Mystring(Mystring &&a);
+    Mystring &operator=(Mystring &&a);
+
+    void setString(const char *s);
+
+    friend std::ostream &operator<<(std::ostream &out, const Mystring &a);
+
+    int length() const;
+
+    void cat(const Mystring &s);
+
+    friend bool operator==(const Mystring &a, const Mystring &b);
+    friend Mystring operator+(const Mystring &a, const Mystring &b);
+
+    const char &operator[](int index) const;
+    char &operator[](int index);
+
     class Iterator {
         friend class Mystring;
 
@@ -38,30 +63,6 @@ private:
         bool operator<=(const Iterator &a) const;
         bool operator>=(const Iterator &a) const;
     };
-
-public:
-    Mystring();
-    Mystring(const char *s);
-    ~Mystring();
-
-    Mystring(const Mystring &a);
-    Mystring &operator=(const Mystring &a);
-    Mystring(Mystring &&a);
-    Mystring &operator=(Mystring &&a);
-
-    void setString(const char *s);
-
-    friend std::ostream &operator<<(std::ostream &out, const Mystring &a);
-
-    int length() const;
-
-    void cat(const Mystring &s);
-
-    friend bool operator==(const Mystring &a, const Mystring &b);
-    friend Mystring operator+(const Mystring &a, const Mystring &b);
-
-    const char &operator[](int index) const;
-    char &operator[](int index);
 
     Iterator begin() const;
     Iterator end() const;
