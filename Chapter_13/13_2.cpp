@@ -73,6 +73,7 @@ public:
         }
         strcpy(str, s);
     }
+    
     friend std::ostream &operator<<(std::ostream &out, const Mystring &a) {
         out << a.str;
         return out;
