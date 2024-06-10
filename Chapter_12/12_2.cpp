@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <cstdlib>
 
+// 这题用c语言的风格写
 int main() {
     FILE *fp = fopen("f2.txt", "r");
     if (fp == NULL) {
