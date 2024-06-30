@@ -87,7 +87,7 @@ public:
     }
 
     void cat(const Mystring &s) {
-        int length = capacity + s.capacity;
+        int length = this->length() + s.length();
         if (length > capacity) {
             capacity = length;
             char *temp = new char[capacity + s.capacity + 1];

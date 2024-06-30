@@ -14,23 +14,23 @@ int main() {
         std::cout << "Please input student id and score: ";
         std::cin >> students[i].id >> students[i].score;
     }
-    std::ofstream ofs("student.dat");
+    std::ofstream ofs("student.dat", std::ios::binary);
     if (!ofs) {
         std::cerr << "Open file failed." << std::endl;
         return 1;
     }
     for (int i = 0; i < N; ++i) {
-        ofs << students[i].id << " " << students[i].score << std::endl;
+        ofs.write(reinterpret_cast<char *>(&students[i]), sizeof(Student));
     }
     ofs.close();
-    std::ifstream ifs("student.dat");
+    std::ifstream ifs("student.dat", std::ios::binary);
     if (!ifs) {
         std::cerr << "Open file failed." << std::endl;
         return 1;
     }
     double max = 0, min = 100, sum = 0;
     for (int i = 0; i < N; ++i) {
-        ifs >> students[i].id >> students[i].score;
+        ifs.read(reinterpret_cast<char *>(&students[i]), sizeof(Student));
         if (students[i].score > max) {
             max = students[i].score;
         }
