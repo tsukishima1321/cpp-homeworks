@@ -4,8 +4,7 @@
 #include <iostream>
 using namespace std;
 
-int main()
-{
+int main() {
     double s1, s2, s3;
     cout << "请输入成绩：" << endl;
     cin >> s1 >> s2 >> s3;

@@ -4,13 +4,9 @@
 */
 #include <iostream>
 
-using std::cin,std::cout,std::endl;
+using namespace std;
 
 int main() {
-#ifdef _WIN32
-    system("chcp 65001");
-#endif
-
     char s[100];
     cin >> s;
     int length;
@@ -22,24 +18,6 @@ int main() {
     }
     cout << s;
 
-    system("pause");
-    return 0;
-}
-
-//algorithm & string
-#include <algorithm>
-#include <string>
-
-int main_() {
-#ifdef _WIN32
-    system("chcp 65001");
-#endif
-
-    std::string s;
-    cin >> s;
-    int length;
-    std::reverse(s.begin(),s.end());
-    cout << s;
     system("pause");
     return 0;
 }

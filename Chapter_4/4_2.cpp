@@ -5,13 +5,11 @@
 
 using namespace std;
 
-int main()
-{
+int main() {
     int a;
     cout << "请输入一个整数：" << endl;
     cin >> a;
-    while (a > 0)
-    {
+    while (a > 0) {
         cout << a % 10;
         a = a / 10;
     }

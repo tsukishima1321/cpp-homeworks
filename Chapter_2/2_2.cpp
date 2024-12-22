@@ -5,30 +5,20 @@
 using namespace std;
 
 // 法一：
-int main()
-{
+int main() {
     double x, y, z;
     cout << "请输入三个数：" << endl;
     cin >> x >> y >> z;
-    if (x < y)
-    {
-        if (x < z)
-        {
+    if (x < y) {
+        if (x < z) {
             cout << x << endl;
-        }
-        else
-        {
+        } else {
             cout << z << endl;
         }
-    }
-    else
-    {
-        if (y < z)
-        {
+    } else {
+        if (y < z) {
             cout << y << endl;
-        }
-        else
-        {
+        } else {
             cout << z << endl;
         }
     }
@@ -37,18 +27,15 @@ int main()
 }
 
 // 法二：
-int main_2()
-{
+int main_2() {
     double x, y, z;
     cout << "请输入三个数：" << endl;
     cin >> x >> y >> z;
     double min = x;
-    if (y < min)
-    {
+    if (y < min) {
         min = y;
     }
-    if (z < min)
-    {
+    if (z < min) {
         min = z;
     }
     cout << min << endl;
@@ -57,25 +44,11 @@ int main_2()
 }
 
 // 法3：
-int main_3()
-{
+int main_3() {
     double x, y, z;
     cout << "请输入三个数：" << endl;
     cin >> x >> y >> z;
     cout << ((((x < y) ? x : y) < z) ? ((x < y) ? x : y) : z);
     system("pause");
-    return 0;
-}
-
-//法4
-int main_4()
-{
-    using std::cin, std::cout, std::endl;
-    int a, b, c, a_b_min, min;
-    cout << "请输入三个整数";
-    cin >> a >> b >> c;
-    a_b_min = (a <= b) * a + (b <= a) * b;
-    min = (a_b_min <= c) *a_b_min + (c <= a_b_min) * c;
-    cout << "最小的整数是：" << min << endl;
     return 0;
 }

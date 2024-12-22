@@ -25,9 +25,27 @@ void freq(char s[], int p[], char &chmax, int &max) {
     }
 }
 
+int main() {
+    char s[100];
+    cin.getline(s, 100);
+    char cmax;
+    int max;
+    int freqs[26] = {};
+    freq(s, freqs, cmax, max);
+    for (int i = 0; i < 26; i++) {
+        cout << (char)('a' + i) << "----" << freqs[i] << endl;
+    }
+    cout << "max: " << cmax << "----" << max << endl;
+    system("pause");
+    return 0;
+}
+
+
+
+//-------------------
+
 #include <tuple>
 #include <vector>
-
 std::tuple<int, char> freq(const char *s, std::vector<int>& freqs) { // 传递vector&而不是数组指针，限制函数中可能的对内存的非法访问
     freqs.resize(26);
     freqs.assign(26, 0);
@@ -48,19 +66,4 @@ std::tuple<int, char> freq(const char *s, std::vector<int>& freqs) { // 传递ve
         }
     }
     return std::make_tuple(maxIndex, 'a' + maxIndex);
-}
-
-int main() {
-    char s[100];
-    cin.getline(s, 100);
-    char cmax;
-    int max;
-    int freqs[26] = {};
-    freq(s, freqs, cmax, max);
-    for (int i = 0; i < 26; i++) {
-        cout << (char)('a' + i) << "----" << freqs[i] << endl;
-    }
-    cout << "max: " << cmax << "----" << max << endl;
-    system("pause");
-    return 0;
 }

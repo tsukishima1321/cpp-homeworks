@@ -6,10 +6,6 @@
 using namespace std;
 
 int main() {
-#ifdef _WIN32
-    system("chcp 65001");
-#endif
-
     char s[100];
     cin.getline(s, 100);
     for (char *c = s; *c != '\0'; c++) {

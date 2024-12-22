@@ -16,10 +16,6 @@ cout<<setw((n-i)*3)<<' ';    */
 using namespace std;
 
 int main() {
-#ifdef _WIN32
-    system("chcp 65001");
-#endif
-
     int n;
     cin >> n;
     int a[10][10] = {};

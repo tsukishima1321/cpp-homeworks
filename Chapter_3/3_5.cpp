@@ -25,21 +25,16 @@ int main()
 */
 #include <iostream>
 using namespace std;
-int main()
-{
+int main() {
     int x, y, r1, r2;
     cin >> x >> y;
     if (x == 0 || y == 0)
         cout << "input error" << endl;
-    else
-    {
-        if (x > y)
-        {
+    else {
+        if (x > y) {
             r1 = x / y;
             r2 = x % y;
-        }
-        else
-        {
+        } else {
             r1 = y / x;
             r2 = y % x;
         }

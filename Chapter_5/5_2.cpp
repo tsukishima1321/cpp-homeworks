@@ -11,10 +11,6 @@ int getRand(int min, int max) {
 }
 
 int main() {
-#ifdef _WIN32
-    system("chcp 65001");
-#endif
-
     srand(time(0));
     int a[20] = {};
     cout << "排序前：" << endl;
@@ -23,7 +19,7 @@ int main() {
         cout << a[i] << " ";
     }
     cout << endl;
-    for (int i = 0; i < 20; i++) {//冒泡排序
+    for (int i = 0; i < 20; i++) { // 冒泡排序
         for (int j = 0; j < 20 - 1 - i; j++) {
             if (a[j] < a[j + 1]) {
                 int temp = a[j + 1];

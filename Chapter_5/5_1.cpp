@@ -12,10 +12,6 @@ int getRand(int min, int max) {
 }
 
 int main() {
-#ifdef _WIN32
-    system("chcp 65001");
-#endif
-
     srand(time(0));
     int a[10] = {};
     for (int i = 0; i < 10; i++) {

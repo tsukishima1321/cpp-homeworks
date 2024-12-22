@@ -19,16 +19,14 @@ int main()
 
 using namespace std;
 
-int main()
-{
-  int n, sum = 0;
-  for (n = 1;; n += 2)
-  {
-    sum = sum + n;
-    if (n == 19)
-      break;
-  }
-  cout << "sum=" << sum << endl;
-  system("pause");
-  return 0;
+int main() {
+    int n, sum = 0;
+    for (n = 1;; n += 2) {
+        sum = sum + n;
+        if (n == 19)
+            break;
+    }
+    cout << "sum=" << sum << endl;
+    system("pause");
+    return 0;
 }

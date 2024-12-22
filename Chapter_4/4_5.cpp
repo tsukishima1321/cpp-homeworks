@@ -7,15 +7,12 @@
 
 using namespace std;
 
-int main()
-{
+int main() {
     double sum = 0;
     int last = 1;
-    for (int i = 0;; i++)
-    {
+    for (int i = 0;; i++) {
         sum += 1.0 / (last + i);
-        if (1.0 / (last + i) < 0.0001)
-        {
+        if (1.0 / (last + i) < 0.0001) {
             break;
         }
         last += i;

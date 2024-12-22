@@ -2,13 +2,9 @@
 // 编写程序，将某一指定字符从一个已知的字符串中删除。假设已知字符串为“aaaasdfga”，将其中出现的'a'字母删除，删除后的字符串为“sdfg”。
 #include <iostream>
 
-using std::cin, std::cout, std::endl, std::string;
+using namespace std;
 
 int main_() {
-#ifdef _WIN32
-    system("chcp 65001");
-#endif
-
     char s[100];
     cout << "要处理的字符串：" << endl;
     cin >> s;
@@ -30,13 +26,12 @@ int main_() {
     return 0;
 }
 
+//----------------
+
 // 使用string:
 #include <string>
 
 int main_2() {
-#ifdef _WIN32
-    system("chcp 65001");
-#endif
 
     string s;
     cout << "要处理的字符串：" << endl;
@@ -55,39 +50,11 @@ int main_2() {
     return 0;
 }
 
-// 使用string iterator:
-#include <string>
-
-int main_3() {
-#ifdef _WIN32
-    system("chcp 65001");
-#endif
-
-    string s;
-    cout << "要处理的字符串：" << endl;
-    cin >> s;
-    cout << "要删除的字符：" << endl;
-    char c;
-    cin >> c;
-    for (string::iterator i = s.begin(); i != s.end(); i++) {
-        if (*i == c) {
-            s.erase(i);
-            i--;
-        }
-    }
-    cout << s;
-    system("pause");
-    return 0;
-}
-
 // 使用algorithm std::remove:
 #include <algorithm>
 #include <string>
 
 int main_4() {
-#ifdef _WIN32
-    system("chcp 65001");
-#endif
 
     string s;
     cout << "要处理的字符串：" << endl;
@@ -143,9 +110,6 @@ private:
 };
 
 int main_5() {
-#ifdef _WIN32
-    system("chcp 65001");
-#endif
 
     string s;
     cout << "要处理的字符串：" << endl;
@@ -161,33 +125,6 @@ int main_5() {
     // string::iterator new_end = remove_if(s.begin(), s.end(), [c](std::regular auto t) { return t == c; });
     s.erase(new_end, s.end());
     cout << s;
-    system("pause");
-    return 0;
-}
-
-// c++20
-// 使用std::range std::view:
-#include <ranges>
-#include <string>
-
-int main() {
-#ifdef _WIN32
-    system("chcp 65001");
-#endif
-
-    string s;
-    cout << "要处理的字符串：" << endl;
-    cin >> s;
-    cout << "要删除的字符：" << endl;
-    char c;
-    cin >> c;
-    auto filtered_s = s | std::views::filter([c](char t) { return t != c; });
-    for (char ch : filtered_s) { //view算法是惰性的，直到遍历输出时才会求值
-        cout << ch;
-    }
-    //也可以将得到的range再转化为实际的string
-    //s = string(filtered_s.begin(), filtered_s.end());
-    //cout << s;
     system("pause");
     return 0;
 }

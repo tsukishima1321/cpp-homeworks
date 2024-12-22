@@ -6,9 +6,6 @@
 using namespace std;
 
 int main_() {
-#ifdef _WIN32
-    system("chcp 65001");
-#endif
     char s[100];
     int n;
     cin >> s;
@@ -27,9 +24,6 @@ int main_() {
 #include <cstring>
 
 int main_2() {
-#ifdef _WIN32
-    system("chcp 65001");
-#endif
     char s[100];
     int n;
     cin >> s;

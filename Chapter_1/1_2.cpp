@@ -4,8 +4,7 @@
 #include <iostream>
 using namespace std;
 
-int main()
-{
+int main() {
     double l1, l2, h;
     l1 = 2;
     l2 = 3;

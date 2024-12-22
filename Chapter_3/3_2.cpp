@@ -4,15 +4,13 @@
 
 using namespace std;
 
-int main()
-{
+int main() {
     double x, y;
     char op;
     cout << "请输入操作数1 操作符op 操作数2" << endl;
     cin >> x >> op >> y;
     double res;
-    switch (op)
-    {
+    switch (op) {
     case '+':
         res = x + y;
         break;

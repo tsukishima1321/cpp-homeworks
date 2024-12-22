@@ -14,10 +14,6 @@ int getRand(int min, int max) {
 }
 
 int main() {
-#ifdef _WIN32
-    system("chcp 65001");
-#endif
-
     srand(time(0));
     int a[10] = {};
     cout << "原：" << endl;

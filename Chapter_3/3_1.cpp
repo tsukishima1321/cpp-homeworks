@@ -4,15 +4,12 @@
 
 using namespace std;
 
-int main()
-{
+int main() {
     int x;
     float y = 0;
     cin >> x;
-    if (x > 0)
-    {
-        switch (x / 1000)
-        {
+    if (x > 0) {
+        switch (x / 1000) {
         case 0:
             y = x;
             break;

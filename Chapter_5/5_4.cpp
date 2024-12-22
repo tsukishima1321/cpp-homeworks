@@ -11,10 +11,6 @@ int getRand(int min, int max) {
 }
 
 int main() {
-#ifdef _WIN32
-    system("chcp 65001");
-#endif
-
     int a[10] = {};
     cout << "请由大到小输入十个整数:" << endl;
     for (int i = 0; i < 10; i++) {

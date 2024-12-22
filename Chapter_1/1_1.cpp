@@ -20,14 +20,13 @@ int main( )
 #include <iostream> //两种写法查找位置和优先级的不同，应尽量使用<>
 
 using namespace std;
-int main()
-{
-        int x, y;
-        cin >> x >> y; // 先输入再进行操作
-        int t = x;     // 变量t需要声明
-        x = y;
-        y = t; // 存在逻辑错误
-        cout << "x=" << x << " y=" << y << endl;
-        system("pause");
-        return 0;
+int main() {
+    int x, y;
+    cin >> x >> y; // 先输入再进行操作
+    int t = x;     // 变量t需要声明
+    x = y;
+    y = t; // 存在逻辑错误
+    cout << "x=" << x << " y=" << y << endl;
+    system("pause");
+    return 0;
 }
